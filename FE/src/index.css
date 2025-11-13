@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #00cba9;
+  --font-display: "Roboto", "sans-serif";
+  --animate-fadeInUp: fadeInUp 0.2s forwards;
+  --animate-fadeInDown: fadeInDown 0.2s forwards;
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeInDown {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes dropdownEnter {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes dropdownExit {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+}
+html,
+body {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.animate-dropdown-enter {
+  animation: dropdownEnter 220ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.animate-dropdown-exit {
+  animation: dropdownExit 180ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* small visual helper */
+.bg-black\/95 {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+/* Untuk browser berbasis WebKit seperti Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Untuk Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
