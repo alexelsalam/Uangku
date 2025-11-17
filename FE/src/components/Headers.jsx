@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CustomSelectPayment from "./CustomselectPayment";
 import CustomSelectCategory from "./CustomSelectCategory";
 import apiData from "../Data/apiData";
+import { useAppStore } from "../store/store.js";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -13,13 +14,14 @@ export default function Headers({ setOverlay, setNewData }) {
   const [valueCategory, setValueCategory] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [total, setTotal] = useState(0);
+  const { shouldRefetch } = useAppStore();
 
   useEffect(() => {
     (async () => {
       const { total } = await apiData("expenses/total");
       setTotal(total);
     })();
-  }, [submitting]);
+  }, [submitting, shouldRefetch]);
 
   const addBalanceHandle = (page) => {
     if (addBalance) setShowAnimOut(true);

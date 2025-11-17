@@ -1,5 +1,5 @@
-// import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useAppStore } from "../store/store";
 // import apiData from "../Data/apiData";
 export default function DetailTransaksi({
   item,
@@ -8,6 +8,7 @@ export default function DetailTransaksi({
   setShowAnimOut,
   setNewData,
 }) {
+  const triggerRefetch = useAppStore((s) => s.triggerRefetch);
   const deleteHandle = async (id) => {
     // Handle delete logic here
     try {
@@ -25,6 +26,7 @@ export default function DetailTransaksi({
     } finally {
       // alert("Data berhasil dihapus");
       setNewData((prev) => !prev); // Refresh data after deletion
+      triggerRefetch();
       handleDetail(); // Close detail view after deletion
     }
   };

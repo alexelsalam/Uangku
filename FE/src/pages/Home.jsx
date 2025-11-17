@@ -3,34 +3,22 @@ import Headers from "../components/Headers";
 import { Nav } from "../components/Nav";
 import TransactionsList from "../components/TransactionsList";
 import apiData from "../Data/apiData.js";
-// import { dummyData } from "../Data/dummyData.js";
 import groupByDate from "../utils/GrupByDate.js";
-import DetailTransaksi from "../components/DetailTransaksi.jsx";
-import TesDetailTransaksi from "../components/tesDetai.jsx";
 
 export default function Home() {
   const [data, setData] = useState(null);
   const [newData, setNewData] = useState(false);
   const [overlay, setOverlay] = useState(false);
-  // const [isDetail, setIsDetail] = useState(false);
-  // const [showAnimOut, setShowAnimOut] = useState(false);
-
-  // Function to toggle overlay
-  // const toggleOverlay = () => {
-  //   setOverlay((prev) => !prev);
-  // };
-
-  // Fetch data from API or use dummy data
 
   useEffect(() => {
-    apiData()
-      .then((data) => {
-        // console.log("Data fetched successfully:", data);
+    (async () => {
+      try {
+        const data = await apiData();
         setData(data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    })();
   }, [newData]);
 
   const tx = groupByDate(data || []); // Gunakan data dari API atau dummyData jika tidak ada

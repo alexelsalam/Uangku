@@ -8,13 +8,14 @@ export function Transaksi() {
   const [newData, setNewData] = useState(false);
   const [overlay, setOverlay] = useState(null);
   useEffect(() => {
-    apiData()
-      .then((data) => {
+    (async () => {
+      try {
+        const data = await apiData();
         setData(data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    })();
   }, [newData]);
 
   const tx = groupByDate(data || []);
