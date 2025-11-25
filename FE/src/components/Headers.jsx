@@ -5,6 +5,7 @@ import CustomSelectPayment from "./CustomselectPayment";
 import CustomSelectCategory from "./CustomSelectCategory";
 import apiData from "../Data/apiData";
 import { useAppStore } from "../store/store.js";
+import Logout from "./Logout.jsx";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -96,12 +97,12 @@ export default function Headers({ setOverlay, setNewData }) {
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-white rounded-full"></div>
             <span className="text-xl">Hello Name</span>
+            <Logout />
           </div>
           <div className="flex items-center justify-center w-6 h-6">
             <Icon icon="guidance:alarm" width="24" height="24" />
           </div>
         </div>
-
         {/* Balance */}
         <div className="mt-8 mb-4 text-center">
           <p className="text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">

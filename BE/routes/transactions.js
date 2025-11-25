@@ -1,71 +1,7 @@
 // routes/transactions.js
 import express from "express";
-const router = express.Router();
 import db from "../db/database.js";
-
-// Tambah transaksi
-router.post("/", (req, res) => {
-  const { tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan } =
-    req.body;
-  const query = `INSERT INTO transactions (tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-  const values = [
-    tipe,
-    kategori,
-    jumlah,
-    admin,
-    pembayaran,
-    waktu,
-    tanggal,
-    catatan,
-  ];
-
-  db.run(query, values, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ id: this.lastID });
-  });
-});
-
-// DELETE (delete transaction by id)
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-
-  const query = `DELETE FROM transactions WHERE id = ?`;
-
-  db.run(query, id, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    if (this.changes === 0)
-      return res.status(404).json({ message: "Transaksi tidak ada" });
-    res.json({ message: "transaksi berhasil dihapus" });
-  });
-});
-
-// EDIT (update transaction by id)
-router.put("/:id", (req, res) => {
-  const { tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan } =
-    req.body;
-  const { id } = req.params;
-
-  const query = `UPDATE transactions SET tipe = ?, kategori = ?, jumlah = ?, admin = ?, pembayaran = ?, waktu = ?, tanggal = ?, catatan = ? WHERE id = ?`;
-
-  const values = [
-    tipe,
-    kategori,
-    jumlah,
-    admin,
-    pembayaran,
-    waktu,
-    tanggal,
-    catatan,
-    id,
-  ];
-
-  db.run(query, values, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    if (this.changes === 0)
-      return res.status(404).json({ message: "Transaksi tidak ada" });
-    res.json({ message: "Transaksi berhasil diperbarui" });
-  });
-});
+const router = express.Router();
 
 // Ambil transaksi berdasarkan rentang tanggal
 router.get("/date", (req, res) => {
@@ -92,11 +28,11 @@ router.get("/date", (req, res) => {
 });
 
 // Ambil transaksi berdasarkan kategori
-router.get("/", (req, res) => {
+router.get("/transaksi/:user_id", (req, res) => {
+  const { user_id } = req.params;
   const { id, tipe, kategori, min, max, pembayaran, dari, sampai } = req.query;
-
-  let query = `SELECT * FROM transactions WHERE 1=1 `;
-  const params = [];
+  let query = `SELECT * FROM transactions WHERE users_id = ?`;
+  const params = [user_id];
   if (id) {
     query += ` AND id = ?`;
     params.push(id);
@@ -155,6 +91,80 @@ router.get("/expenses/total", (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     console.log(row);
     res.json({ month: `${month}-${year}`, total: row.total || 0 });
+  });
+});
+
+// Tambah transaksi
+router.post("/transaksi", (req, res) => {
+  const {
+    users_id,
+    tipe,
+    kategori,
+    jumlah,
+    admin,
+    pembayaran,
+    waktu,
+    tanggal,
+    catatan,
+  } = req.body;
+  const query = `INSERT INTO transactions (users_id,tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)`;
+  const values = [
+    users_id,
+    tipe,
+    kategori,
+    jumlah,
+    admin,
+    pembayaran,
+    waktu,
+    tanggal,
+    catatan,
+  ];
+
+  db.run(query, values, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ id: this.lastID });
+  });
+});
+
+// DELETE (delete transaction by id)
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = `DELETE FROM transactions WHERE id = ?`;
+
+  db.run(query, id, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0)
+      return res.status(404).json({ message: "Transaksi tidak ada" });
+    res.json({ message: "transaksi berhasil dihapus" });
+  });
+});
+
+// EDIT (update transaction by id)
+router.put("/:id", (req, res) => {
+  const { tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan } =
+    req.body;
+  const { id } = req.params;
+
+  const query = `UPDATE transactions SET tipe = ?, kategori = ?, jumlah = ?, admin = ?, pembayaran = ?, waktu = ?, tanggal = ?, catatan = ? WHERE id = ?`;
+
+  const values = [
+    tipe,
+    kategori,
+    jumlah,
+    admin,
+    pembayaran,
+    waktu,
+    tanggal,
+    catatan,
+    id,
+  ];
+
+  db.run(query, values, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0)
+      return res.status(404).json({ message: "Transaksi tidak ada" });
+    res.json({ message: "Transaksi berhasil diperbarui" });
   });
 });
 
