@@ -10,15 +10,10 @@ function middleware(req, res, next) {
 
   // Cek apakah token valid (misalnya, token harus berupa "Bearer <token>")
   const token = authHeader.split(" ")[1];
-  console.log("Token:", token);
-  // if (token !== "valid-token") {
-  //   return res.status(403).json({ message: "Forbidden" });
-  // }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
-    req.user = decoded; // Simpan informasi pengguna ke dalam request
+    req.user = decoded.username;
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
   }

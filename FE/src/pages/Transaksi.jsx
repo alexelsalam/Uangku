@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TransactionsList from "../components/TransactionsList";
 import groupByDate from "../utils/GrupByDate";
-import apiData from "../Data/apiData";
+// import apiData from "../Data/apiData";
 
 export function Transaksi() {
   const [data, setData] = useState(null);
@@ -10,8 +10,19 @@ export function Transaksi() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await apiData();
-        setData(data);
+        const data = await fetch("/transaksi", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await data.json();
+        if (!data.ok) {
+          throw new Error(`Error: ${result.message}`);
+        }
+
+        setData(result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

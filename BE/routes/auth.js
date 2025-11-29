@@ -38,9 +38,14 @@ router.post("/userLogin", (req, res) => {
     const valid = user.password === password; // For simplicity, using plain text comparison
     if (!valid) return res.status(400).json({ error: "Password salah" });
     // Generate JWT token
-    const token = jwt.sign({ user_id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+
+    const token = jwt.sign(
+      { username: user.username },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     res.json({ token });
   });

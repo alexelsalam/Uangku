@@ -3,9 +3,10 @@ import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import CustomSelectPayment from "./CustomselectPayment";
 import CustomSelectCategory from "./CustomSelectCategory";
-import apiData from "../Data/apiData";
+// import apiData from "../Data/apiData";
 import { useAppStore } from "../store/store.js";
 import Logout from "./Logout.jsx";
+import { jwtDecode } from "jwt-decode";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -17,9 +18,19 @@ export default function Headers({ setOverlay, setNewData }) {
   const [total, setTotal] = useState(0);
   const { shouldRefetch } = useAppStore();
 
+  const token = localStorage.getItem("token");
+  const { username } = token ? jwtDecode(token) : null;
+
   useEffect(() => {
     (async () => {
-      const { total } = await apiData("expenses/total");
+      const api = await fetch("/transaksi/expenses/total", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const { total } = await api.json();
       setTotal(total);
     })();
   }, [submitting, shouldRefetch]);
@@ -47,6 +58,7 @@ export default function Headers({ setOverlay, setNewData }) {
       const { admin, catatan, jumlah } = Object.fromEntries(fd.entries());
       const date = new Date();
       const payload = {
+        users_id: username, // use decoded username from token
         tipe: formPage ? "Pemasukan" : "Pengeluaran",
         kategori: valueCategory,
         pembayaran: valuePayment,
@@ -60,9 +72,12 @@ export default function Headers({ setOverlay, setNewData }) {
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
 
-      const res = await fetch("/transactions", {
+      const res = await fetch("/transaksi", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
 
@@ -96,7 +111,7 @@ export default function Headers({ setOverlay, setNewData }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-white rounded-full"></div>
-            <span className="text-xl">Hello Name</span>
+            <span className="text-xl">Hello {username}</span>
             <Logout />
           </div>
           <div className="flex items-center justify-center w-6 h-6">

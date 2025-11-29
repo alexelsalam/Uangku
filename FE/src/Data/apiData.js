@@ -1,7 +1,5 @@
 export default async function apiData(params, query) {
-  const url = `/transactions/${params ? `${params}` : ""}${
-    query ? `?${query}` : ""
-  }`;
+  const url = `/${params ? `${params}` : ""}${query ? `?${query}` : ""}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {

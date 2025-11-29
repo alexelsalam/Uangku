@@ -12,9 +12,12 @@ export default function DetailTransaksi({
   const deleteHandle = async (id) => {
     // Handle delete logic here
     try {
-      const res = await fetch(`/transactions/${id}`, {
+      const res = await fetch(`/transaksi/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
       });
       if (!res.ok) {
         const text = await res.text().catch(() => "");

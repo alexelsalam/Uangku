@@ -7,7 +7,7 @@ import middleware from "./middleware/middleware.js";
 
 app.use(express.json());
 app.use("/", authRouter);
-app.use("/", middleware, transactionsRouter);
+app.use("/transaksi", middleware, transactionsRouter);
 
 app.get("/", (req, res) => {
   res.send("API Catatan Uang berjalan");

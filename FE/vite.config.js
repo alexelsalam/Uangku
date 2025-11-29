@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       // semua request /api ke backend di port 3000
-      "/transactions": {
+      "/transaksi": {
         target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,

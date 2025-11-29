@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Ambil transaksi berdasarkan rentang tanggal
 router.get("/date", (req, res) => {
+  const username = req.user; // Menggunakan user_id dari middleware
   const { start, end } = req.query;
   console.log("Start:", start, "End:", end);
   if (!start || !end) {
@@ -15,11 +16,11 @@ router.get("/date", (req, res) => {
 
   const query = `
     SELECT * FROM transactions 
-    WHERE tanggal BETWEEN ? AND ?
+    WHERE users_id = ? AND tanggal BETWEEN ? AND ?
     ORDER BY tanggal ASC
   `;
 
-  db.all(query, [start, end], (err, rows) => {
+  db.all(query, [username, start, end], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -28,11 +29,11 @@ router.get("/date", (req, res) => {
 });
 
 // Ambil transaksi berdasarkan kategori
-router.get("/transaksi/:user_id", (req, res) => {
-  const { user_id } = req.params;
+router.get("/", (req, res) => {
+  const username = req.user;
   const { id, tipe, kategori, min, max, pembayaran, dari, sampai } = req.query;
   let query = `SELECT * FROM transactions WHERE users_id = ?`;
-  const params = [user_id];
+  const params = [username]; // Menggunakan user_id dari middleware
   if (id) {
     query += ` AND id = ?`;
     params.push(id);
@@ -58,7 +59,7 @@ router.get("/transaksi/:user_id", (req, res) => {
     params.push(dari, sampai);
   }
 
-  query += `ORDER BY tanggal ASC`;
+  query += `ORDER BY tanggal DESC`; // Urutkan berdasarkan tanggal terbaru
 
   db.all(query, params, (err, rows) => {
     if (err) {
@@ -83,11 +84,11 @@ router.get("/expenses/total", (req, res) => {
   const query = `
     SELECT SUM(jumlah) AS total
     FROM transactions
-    WHERE tipe = 'Pengeluaran'
+    WHERE users_id = ? AND tipe = 'Pengeluaran'
     AND tanggal BETWEEN ? AND ?
   `;
 
-  db.get(query, [start, end], (err, row) => {
+  db.get(query, [req.user, start, end], (err, row) => {
     if (err) return res.status(500).json({ error: err.message });
     console.log(row);
     res.json({ month: `${month}-${year}`, total: row.total || 0 });
@@ -95,7 +96,7 @@ router.get("/expenses/total", (req, res) => {
 });
 
 // Tambah transaksi
-router.post("/transaksi", (req, res) => {
+router.post("/", (req, res) => {
   const {
     users_id,
     tipe,
@@ -128,11 +129,12 @@ router.post("/transaksi", (req, res) => {
 
 // DELETE (delete transaction by id)
 router.delete("/:id", (req, res) => {
+  const username = req.user; // Menggunakan user_id dari middleware
   const { id } = req.params;
 
-  const query = `DELETE FROM transactions WHERE id = ?`;
+  const query = `DELETE FROM transactions WHERE users_id = ? AND id = ?`;
 
-  db.run(query, id, function (err) {
+  db.run(query, [username, id], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     if (this.changes === 0)
       return res.status(404).json({ message: "Transaksi tidak ada" });
