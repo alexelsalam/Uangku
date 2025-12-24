@@ -21,14 +21,7 @@ export function Data() {
          rounded-3xl h-auto w-[97%] mx-auto mt-4 px-2"
         >
           <p className="p-2">pendapatan</p>
-          <div className="flex justify-center">
-            <PieChartWithPaddingAngle />
-          </div>
-          <div className="m-2">
-            <p className="h-1 w-3 bg-red-700 rounded-full "></p>
-            <p>Gaji 30%</p>
-            <p>Rp5,000,000</p>
-          </div>
+          <PieChartWithPaddingAngle />
         </div>
       </div>
       {/* bg */}

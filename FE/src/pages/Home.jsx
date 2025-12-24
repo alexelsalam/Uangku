@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await fetch("/transaksi", {
+        const data = await fetch("/transactions", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

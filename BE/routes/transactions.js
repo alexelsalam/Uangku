@@ -68,13 +68,21 @@ router.get("/", (req, res) => {
     res.json(rows);
   });
 });
+//jumlah pengeluaran bulan ini
+router.get("/pengeluaran/total", (req, res) => {
+  const { mm, yy } = req.query;
+  // jika mm dan yy tidak ada, gunakan bulan dan tahun sekarang
+  const year = yy || new Date().getFullYear();
+  const month = mm ? parseInt(mm, 10) : new Date().getMonth() + 1;
+  // validasi bulan
+  if (month < 1 || month > 12) {
+    return res.status(400).json({ error: "Bulan tidak valid" });
+  }
 
-router.get("/expenses/total", (req, res) => {
-  const now = new Date();
-
-  // ambil bulan dan tahun sekarang
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  // validasi tahun
+  if (year < 2000 || year > new Date().getFullYear()) {
+    return res.status(400).json({ error: "Tahun tidak valid" });
+  }
 
   // buat rentang tanggal 1 sampai akhir bulan
   const start = `${year}-${String(month).padStart(2, "0")}-01`;
@@ -95,6 +103,40 @@ router.get("/expenses/total", (req, res) => {
   });
 });
 
+// jumlah pemasukan bulan ini
+router.get("/pemasukan/total", (req, res) => {
+  const { mm, yy } = req.query;
+  // jika mm dan yy tidak ada, gunakan bulan dan tahun sekarang
+  const year = yy || new Date().getFullYear();
+  const month = mm ? parseInt(mm, 10) : new Date().getMonth() + 1;
+  // validasi bulan
+  if (month < 1 || month > 12) {
+    return res.status(400).json({ error: "Bulan tidak valid" });
+  }
+
+  // validasi tahun
+  if (year < 2000 || year > new Date().getFullYear()) {
+    return res.status(400).json({ error: "Tahun tidak valid" });
+  }
+
+  // buat rentang tanggal 1 sampai akhir bulan
+  const start = `${year}-${String(month).padStart(2, "0")}-01`;
+  const end = new Date(year, month, 0).toISOString().split("T")[0]; // akhir bulan
+
+  console.log(start, end);
+  const query = `
+    SELECT SUM(jumlah) AS total
+    FROM transactions
+    WHERE users_id = ? AND tipe = 'Pemasukan'
+    AND tanggal BETWEEN ? AND ?
+  `;
+
+  db.get(query, [req.user, start, end], (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+    console.log(row);
+    res.json({ month: `${month}-${year}`, total: row.total || 0 });
+  });
+});
 // Tambah transaksi
 router.post("/", (req, res) => {
   const {
@@ -170,4 +212,44 @@ router.put("/:id", (req, res) => {
   });
 });
 
+// Ambil data untuk grafik bar
+router.get("/data/bar", (req, res) => {
+  const query = `
+    SELECT
+      strftime('%Y-%m', tanggal) AS date,
+      SUM(CASE WHEN tipe = 'Pengeluaran' THEN jumlah ELSE 0 END) AS Pengeluaran,
+      SUM(CASE WHEN tipe = 'Pemasukan' THEN jumlah ELSE 0 END) AS "Pemasukan"
+    FROM transactions
+    WHERE users_id = ?
+    GROUP BY date
+    ORDER BY date
+  `;
+
+  db.all(query, [req.user], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
+});
+
+// Ambil data untuk grafik pie
+router.get("/data/pie", (req, res) => {
+  const query = `
+    SELECT 
+  kategori,
+  SUM(jumlah) AS jumlah
+FROM transactions
+WHERE users_id = ?
+  AND tipe = 'Pengeluaran'
+GROUP BY kategori;
+`;
+
+  db.all(query, [req.user], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
+});
 export default router;

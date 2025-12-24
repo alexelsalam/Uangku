@@ -23,13 +23,21 @@ export default function Headers({ setOverlay, setNewData }) {
 
   useEffect(() => {
     (async () => {
-      const api = await fetch("/transaksi/expenses/total", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const now = new Date();
+
+      // ambil bulan dan tahun sekarang
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const api = await fetch(
+        `/transactions/pengeluaran/total?mm=${month}&yy=${year}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const { total } = await api.json();
       setTotal(total);
     })();
@@ -72,7 +80,7 @@ export default function Headers({ setOverlay, setNewData }) {
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
 
-      const res = await fetch("/transaksi", {
+      const res = await fetch("/transactions", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

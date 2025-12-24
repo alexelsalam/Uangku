@@ -12,7 +12,7 @@ export default function DetailTransaksi({
   const deleteHandle = async (id) => {
     // Handle delete logic here
     try {
-      const res = await fetch(`/transaksi/${id}`, {
+      const res = await fetch(`/transactions/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -9,66 +11,66 @@ import {
 } from "recharts";
 
 // #region Sample data
-const data = [
+const dummyData = [
   {
     date: "2000-01",
-    out: 80000,
-    in: 1000000,
+    Pengeluaran: 80000,
+    Pemasukan: 1000000,
   },
   {
     date: "2000-02",
-    out: 300000,
-    in: 139800,
+    Pengeluaran: 300000,
+    Pemasukan: 139800,
   },
   {
     date: "2000-03",
-    out: 2000000,
-    in: 2500000,
+    Pengeluaran: 2000000,
+    Pemasukan: 2500000,
   },
   {
     date: "2000-04",
-    out: 2700080,
-    in: 3900008,
+    Pengeluaran: 2700080,
+    Pemasukan: 3900008,
   },
   {
     date: "2000-05",
-    out: 1000890,
-    in: 4800000,
+    Pengeluaran: 1000890,
+    Pemasukan: 4800000,
   },
   {
     date: "2000-06",
-    out: 2000390,
-    in: 3800000,
+    Pengeluaran: 2000390,
+    Pemasukan: 3800000,
   },
   {
     date: "2000-07",
-    out: 3000490,
-    in: 4300000,
+    Pengeluaran: 3000490,
+    Pemasukan: 4300000,
   },
   {
     date: "2000-08",
-    out: 4000000,
-    in: 2400000,
+    Pengeluaran: 4000000,
+    Pemasukan: 2400000,
   },
   {
     date: "2000-09",
-    out: 3000000,
-    in: 1300098,
+    Pengeluaran: 3000000,
+    Pemasukan: 1300098,
   },
   {
     date: "2000-10",
-    out: 2000000,
-    in: 9800000,
+    Pengeluaran: 2000000,
+    Pemasukan: 9800000,
   },
   {
     date: "2000-11",
-    out: 2000780,
-    in: 3900008,
+    Pengeluaran: 2000780,
+    Pemasukan: 3900008,
   },
   {
     date: "2000-12",
-    out: 1000890,
-    in: 4800000,
+    Pengeluaran: 1000890,
+    Pemasukan: 4800000,
   },
 ];
 
@@ -123,6 +125,28 @@ const formatNumberShort = (num) => {
 };
 
 const BarChartWithMultiXAxis = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetch("/transactions/data/bar", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await data.json();
+        if (!data.ok) {
+          throw new Error(`Error: ${result.message}`);
+        }
+        // console.log(result);
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    })();
+  }, []);
   return (
     <BarChart
       style={{
@@ -132,7 +156,7 @@ const BarChartWithMultiXAxis = () => {
         aspectRatio: 1.618,
       }}
       responsive
-      data={data}
+      data={data.length > 0 ? data : dummyData}
       margin={{
         top: 25,
         right: 0,
@@ -179,8 +203,8 @@ const BarChartWithMultiXAxis = () => {
         cursor={{ fill: "rgba(255,255,255,0.04)" }} // hover vertical highlight
       />
       <Legend wrapperStyle={{ paddingTop: "1em" }} />
-      <Bar dataKey="in" fill="#328E6E" radius={[8, 8, 0, 0]} />
-      <Bar dataKey="out" fill="#CF0F47" radius={[8, 8, 0, 0]} />
+      <Bar dataKey="Pemasukan" fill="#328E6E" radius={[8, 8, 0, 0]} />
+      <Bar dataKey="Pengeluaran" fill="#CF0F47" radius={[8, 8, 0, 0]} />
     </BarChart>
   );
 };
