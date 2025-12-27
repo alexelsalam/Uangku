@@ -73,12 +73,16 @@ export default function CustomSelectCategory({
           }`}
         >
           {options.map((opt) => (
-            <div className="flex items-center gap-2 flex-col" key={opt.value}>
+            <div
+              className="flex items-center gap-2 flex-col justify-center w-1/4 cursor-pointer"
+              key={opt.value}
+            >
               <li
                 key={opt.value}
                 role="option"
                 aria-selected={opt.value === value}
-                className={`h-8 w-8 cursor-pointer hover:bg-[#333] transition-colors bg-white rounded-full ${
+                style={{ backgroundColor: opt.color }}
+                className={`h-8 w-8 cursor-pointer hover:bg-[#333] transition-colors rounded-full flex items-center justify-center ${
                   opt.value === value
                     ? "bg-[#111] text-[#00CBA9]"
                     : "text-white"
@@ -87,7 +91,9 @@ export default function CustomSelectCategory({
                   onChange(opt.value);
                   setOpen(false);
                 }}
-              ></li>
+              >
+                {opt.icon}
+              </li>
               <p>{opt.value}</p>
             </div>
           ))}

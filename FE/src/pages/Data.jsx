@@ -6,7 +6,7 @@ export function Data() {
   return (
     <div
       id="transaksi"
-      className="relative bg-black text-white flex flex-col w-full h-screen "
+      className="relative bg-black text-white flex flex-col w-full h-screen md:w-sm md:mx-auto md:rounded-lg md:shadow-lg"
     >
       <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm">
         <h2 className="pt-2 pl-5 text-2xl font-normal">Data</h2>

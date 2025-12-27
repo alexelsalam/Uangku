@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div
       id="home"
-      className="relative flex flex-col w-full text-white bg-black min-h-screen"
+      className="relative flex flex-col w-full text-white bg-black min-h-screen md:w-sm md:mx-auto md:rounded-lg md:shadow-lg"
     >
       {overlay && (
         <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm z-10" />

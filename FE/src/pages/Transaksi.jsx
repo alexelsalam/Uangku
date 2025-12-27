@@ -44,19 +44,19 @@ export function Transaksi() {
   return (
     <div
       id="transaksi"
-      className="relative bg-black text-white flex flex-col w-full h-screen "
+      className="relative bg-black text-white flex flex-col w-full h-screen md:w-sm md:mx-auto md:rounded-lg md:shadow-lg"
     >
       {/* overlay saat nampilin tab lain*/}
       {overlay && (
         <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm z-[11]" />
       )}
-      <div className="backdrop-blur-sm flex justify-between fixed bg-[#B6B09F]/10 z-[10] w-full h-14 rounded-b-lg">
+      <div className="relative backdrop-blur-sm flex justify-between bg-[#B6B09F]/10 z-[10] w-full h-14 rounded-b-lg">
         <div>
           <h2 className="pt-2 pl-3 text-xl font-normal">Transaksi</h2>
         </div>
         <button
           onClick={() => (filterHandle(), setOverlay(true))}
-          className={`absolute right-4 top-2 font-normal px-5 rounded-full border-solid border-white border-2 items-center ${
+          className={`absolute right-4 top-2  font-normal px-5 rounded-full border-solid border-white border-2 items-center ${
             overlay ? "" : ""
           }`}
         >

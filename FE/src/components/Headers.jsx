@@ -7,6 +7,31 @@ import CustomSelectCategory from "./CustomSelectCategory";
 import { useAppStore } from "../store/store.js";
 import Logout from "./Logout.jsx";
 import { jwtDecode } from "jwt-decode";
+import Cash from "../icons/icons_pendapatan/Cash.jsx";
+import Pasif from "../icons/icons_pendapatan/Pasif.jsx";
+import SideJob from "../icons/icons_pendapatan/SideJob.jsx";
+import Freelance from "../icons/icons_pendapatan/Freelance.jsx";
+import FnB from "../icons/icons_pengeluaran/FnB.jsx";
+import Pulsa from "../icons/icons_pengeluaran/Pulsa.jsx";
+import Internet from "../icons/icons_pengeluaran/Internet.jsx";
+import Bensin from "../icons/icons_pengeluaran/Bensin.jsx";
+import Liburan from "../icons/icons_pengeluaran/Liburan.jsx";
+import Kesehatan from "../icons/icons_pengeluaran/Kesehatan.jsx";
+import Hiburan from "../icons/icons_pengeluaran/Hiburan.jsx";
+import Kecantikan from "../icons/icons_pengeluaran/Kecantikan.jsx";
+import Transportasi from "../icons/icons_pengeluaran/Transportasi.jsx";
+import Pakaian from "../icons/icons_pengeluaran/Pakaian.jsx";
+import Service from "../icons/icons_pengeluaran/Service.jsx";
+import Pajak from "../icons/icons_pengeluaran/Pajak.jsx";
+import Darurat from "../icons/icons_pengeluaran/Darurat.jsx";
+import Pendidikan from "../icons/icons_pengeluaran/Pendidikan.jsx";
+import Lainnya from "../icons/icons_pengeluaran/Lainnya.jsx";
+import Tagihan from "../icons/icons_pengeluaran/Tagihan.jsx";
+import Belanja from "../icons/icons_pengeluaran/Belanja.jsx";
+import Investasi from "../icons/icons_pengeluaran/Investasi.jsx";
+import Asuransi from "../icons/icons_pengeluaran/Asuransi.jsx";
+import Profile from "../icons/Profile.jsx";
+import Alarm from "../icons/Alarm.jsx";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -118,12 +143,15 @@ export default function Headers({ setOverlay, setNewData }) {
         {/* Top bar */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-white rounded-full"></div>
+            <div className="bg-white rounded-full ml-2 p-1 shadow-lg">
+              <Profile />
+              {/* <p className="text-black">hello</p> */}
+            </div>
             <span className="text-xl">Hello {username}</span>
             <Logout />
           </div>
-          <div className="flex items-center justify-center w-6 h-6">
-            <Icon icon="guidance:alarm" width="24" height="24" />
+          <div className="flex items-center justify-center w-6 h-6 mr-2">
+            <Alarm />
           </div>
         </div>
         {/* Balance */}
@@ -207,10 +235,30 @@ export default function Headers({ setOverlay, setNewData }) {
                 <label htmlFor="Kategori">
                   <CustomSelectCategory
                     options={[
-                      { value: "gaji", label: "gaji" },
-                      { value: "pasif", label: "pasif" },
-                      { value: "side", label: "side job" },
-                      { value: "freelance", label: "freelance" },
+                      {
+                        value: "gaji",
+                        label: "gaji",
+                        icon: <Cash />,
+                        color: "#67AE6E",
+                      },
+                      {
+                        value: "pasif",
+                        label: "pasif",
+                        icon: <Pasif />,
+                        color: "#B12C00",
+                      },
+                      {
+                        value: "side",
+                        label: "side job",
+                        icon: <SideJob />,
+                        color: "#3D74B6",
+                      },
+                      {
+                        value: "freelance",
+                        label: "freelance",
+                        icon: <Freelance />,
+                        color: "#E9762B",
+                      },
                     ]}
                     placeholder="Pilih Kategori"
                     value={valueCategory}
@@ -278,10 +326,120 @@ export default function Headers({ setOverlay, setNewData }) {
                 <label htmlFor="Kategori">
                   <CustomSelectCategory
                     options={[
-                      { value: "makan dan minum", label: "makan dan minum" },
-                      { value: "pulsa", label: "pulsa" },
-                      { value: "bensin", label: "bensin" },
-                      { value: "liburan", label: "liburan" },
+                      {
+                        value: "FnB",
+                        label: "FnB",
+                        icon: <FnB />,
+                        color: "#205781",
+                      },
+                      {
+                        value: "pulsa",
+                        label: "pulsa",
+                        icon: <Pulsa />,
+                        color: "#437057",
+                      },
+                      {
+                        value: "internet",
+                        label: "internet",
+                        icon: <Internet />,
+                        color: "#67AE6E",
+                      },
+                      {
+                        value: "bensin",
+                        label: "bensin",
+                        icon: <Bensin />,
+                        color: "#8A0000",
+                      },
+                      {
+                        value: "liburan",
+                        label: "liburan",
+                        icon: <Liburan />,
+                        color: "#3B9797",
+                      },
+                      {
+                        value: "kesehatan",
+                        label: "kesehatan",
+                        icon: <Kesehatan />,
+                        color: "#3D74B6",
+                      },
+                      {
+                        value: "tagihan",
+                        label: "tagihan",
+                        icon: <Tagihan />,
+                        color: "#CF0F47",
+                      },
+                      {
+                        value: "belanja",
+                        label: "belanja",
+                        icon: <Belanja />,
+                        color: "#0D4715",
+                      },
+                      {
+                        value: "hiburan",
+                        label: "hiburan",
+                        icon: <Hiburan />,
+                        color: "#4A9782",
+                      },
+                      {
+                        value: "kecantikan",
+                        label: "kecantikan",
+                        icon: <Kecantikan />,
+                        color: "#DB6B97",
+                      },
+                      {
+                        value: "transportasi",
+                        label: "transportasi",
+                        icon: <Transportasi />,
+                        color: "#547792",
+                      },
+                      {
+                        value: "pakaian",
+                        label: "pakaian",
+                        icon: <Pakaian />,
+                        color: "#48A6A7",
+                      },
+                      {
+                        value: "service",
+                        label: "service",
+                        icon: <Service />,
+                        color: "#E9762B",
+                      },
+                      {
+                        value: "investasi",
+                        label: "investasi",
+                        icon: <Investasi />,
+                        color: "#00712D",
+                      },
+                      {
+                        value: "asuransi",
+                        label: "asuransi",
+                        icon: <Asuransi />,
+                        color: "#123458",
+                      },
+                      {
+                        value: "pajak",
+                        label: "pajak",
+                        icon: <Pajak />,
+                        color: "#E9762B",
+                      },
+                      {
+                        value: "darurat",
+                        label: "darurat",
+                        icon: <Darurat />,
+                        color: "#B12C00",
+                      },
+                      {
+                        value: "pendidikan",
+                        label: "pendidikan",
+                        icon: <Pendidikan />,
+                        color: "#279EFF",
+                      },
+                      {
+                        value: "lainnya",
+                        label: "lainnya",
+                        icon: <Lainnya />,
+                        color: "#748873",
+                      },
                     ]}
                     placeholder="Pilih Kategori"
                     value={valueCategory}

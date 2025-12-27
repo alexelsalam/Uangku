@@ -20,7 +20,7 @@ export default function Login() {
   };
 
   return (
-    <div className=" h-screen bg-black">
+    <div className=" h-screen bg-black md:w-sm md:mx-auto md:rounded-lg md:shadow-lg">
       <div className="relative bg-primary h-1/6"></div> {/* wave vektor */}
       <div className="-mt-1">
         <img

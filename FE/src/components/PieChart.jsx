@@ -69,7 +69,7 @@ export default function PieChartWithPaddingAngle({
           />
         </PieChart>
       </div>
-      <div className="flex flex-wrap max-w gap-10 mt-2">
+      <div className="flex flex-wrap   gap-10 mt-2">
         {data.map((item, index) => (
           <div key={index} className="m-2">
             <div
