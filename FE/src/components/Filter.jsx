@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 export default function Filter({
   filter,
   setShowAnimOut,
@@ -7,8 +6,6 @@ export default function Filter({
   setOverlay,
   setQuery,
 }) {
-  const location = useLocation();
-
   const [tipe, setTipe] = useState("");
   const [pembayaran, setPembayaran] = useState("");
   const [jumlah, setJumlah] = useState("");
@@ -26,10 +23,6 @@ export default function Filter({
 
   // load saved filter on mount
   useEffect(() => {
-    if (location.pathname !== "/filter") {
-      sessionStorage.removeItem("uangku_filter");
-      return; // Do not load filter if not on filter page
-    }
     try {
       const saved = sessionStorage.getItem("uangku_filter");
       if (saved) {
@@ -46,7 +39,7 @@ export default function Filter({
     } catch (err) {
       alert(`Error :${err} loading saved filter. Please try again.`);
     }
-  }, [location.pathname]);
+  }, []);
 
   const handleJumlah = (option) => {
     setJumlah(jumlah === option ? "" : option);

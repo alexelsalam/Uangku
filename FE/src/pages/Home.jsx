@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Headers from "../components/Headers";
 import { Nav } from "../components/Nav";
 import TransactionsList from "../components/TransactionsList";
-// import apiData from "../Data/apiData.js";
+import apiData from "../Data/apiData.js";
 import groupByDate from "../utils/GrupByDate.js";
 
 export default function Home() {
@@ -12,23 +12,8 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      try {
-        const data = await fetch("/transactions", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await data.json();
-        if (!data.ok) {
-          throw new Error(`Error: ${result.message}`);
-        }
-
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      const result = await apiData();
+      setData(result);
     })();
   }, [newData]);
 

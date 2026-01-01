@@ -2,32 +2,28 @@ import { useEffect, useState } from "react";
 import TransactionsList from "../components/TransactionsList";
 import groupByDate from "../utils/GrupByDate";
 import Filter from "../components/Filter.jsx";
-// import apiData from "../Data/apiData";
+import apiData from "../Data/apiData.js";
+import { useLocation } from "react-router-dom";
 
 export function Transaksi() {
   const [data, setData] = useState(null);
   const [newData, setNewData] = useState(false);
   const [query, setQuery] = useState("");
   const [overlay, setOverlay] = useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    // Clear session storage when navigating to the Transaksi page
+    if (location.pathname === "/transaksi") {
+      sessionStorage.removeItem("uangku_filter");
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     (async () => {
-      try {
-        const data = await fetch(`/transactions${query ? `?${query}` : ""}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        const result = await data.json();
-        if (!data.ok) {
-          throw new Error(`Error: ${result.message}`);
-        }
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      const result = await apiData(null, query);
+      setData(result);
     })();
   }, [newData, query]);
 
@@ -64,7 +60,7 @@ export function Transaksi() {
         </button>
       </div>
       {/* membuat overlay bisa di scroll */}
-      <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm">
+      <div className="absolute inset-0 bg-black/80 overflow-auto hide-scrollbar backdrop-blur-sm">
         <div className="px-4 pt-15 space-y-1 ">
           {/* fallback ketika kosong */}
           {Object.keys(tx).length === 0 ? (

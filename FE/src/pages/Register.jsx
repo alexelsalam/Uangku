@@ -1,3 +1,5 @@
+import apiAuth from "../Data/apiAuth";
+
 export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -5,20 +7,11 @@ export default function Register() {
     const password = e.target.password.value;
 
     try {
-      const response = await fetch("userRegister", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+      await apiAuth("/userRegister", {
+        username,
+        password,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to register");
-      }
-
-      const data = await response.json();
-      console.log(data);
       alert("Registration successful!");
       window.location.href = "/login"; // Redirect to login page after successful registration
     } catch (error) {

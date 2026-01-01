@@ -1,21 +1,23 @@
+import apiAuth from "../Data/apiAuth";
+
 export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
     const { username, password } = Object.fromEntries(fd.entries());
-
-    // Here you would typically handle the login logic, such as calling an API.
-    const res = await fetch("userLogin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      window.location.href = "/home";
+    try {
+      const data = await apiAuth("/userLogin", {
+        username,
+        password,
+      });
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "/home";
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      alert("Login failed. Please check your credentials.");
+      return;
     }
   };
 

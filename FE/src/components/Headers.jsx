@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import CustomSelectPayment from "./CustomselectPayment";
@@ -31,7 +30,8 @@ import Belanja from "../icons/icons_pengeluaran/Belanja.jsx";
 import Investasi from "../icons/icons_pengeluaran/Investasi.jsx";
 import Asuransi from "../icons/icons_pengeluaran/Asuransi.jsx";
 import Profile from "../icons/Profile.jsx";
-import Alarm from "../icons/Alarm.jsx";
+import WarningSpend from "./WarningSpend.jsx";
+import apiData from "../Data/apiData.js";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -48,22 +48,8 @@ export default function Headers({ setOverlay, setNewData }) {
 
   useEffect(() => {
     (async () => {
-      const now = new Date();
+      const { total } = await apiData("pengeluaran/total");
 
-      // ambil bulan dan tahun sekarang
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const api = await fetch(
-        `/transactions/pengeluaran/total?mm=${month}&yy=${year}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const { total } = await api.json();
       setTotal(total);
     })();
   }, [submitting, shouldRefetch]);
@@ -104,23 +90,9 @@ export default function Headers({ setOverlay, setNewData }) {
           "0"
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
+      const res = await apiData(null, null, "POST", payload);
 
-      const res = await fetch("/transactions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`Server error ${res.status}: ${text}`);
-      }
-
-      const created = await res.json();
-      console.log("Transaction created:", created);
+      console.log("Transaction created:", res);
       // close form and optionally reset values
       setAddBalance(false);
       setShowAnimOut(false);
@@ -150,9 +122,7 @@ export default function Headers({ setOverlay, setNewData }) {
             <span className="text-xl">Hello {username}</span>
             <Logout />
           </div>
-          <div className="flex items-center justify-center w-6 h-6 mr-2">
-            <Alarm />
-          </div>
+          <WarningSpend />
         </div>
         {/* Balance */}
         <div className="mt-8 mb-4 text-center">
@@ -193,7 +163,7 @@ export default function Headers({ setOverlay, setNewData }) {
         <div
           className={`${
             addBalance ? "animate-fadeInUp" : "animate-fadeInDown"
-          }  absolute z-10 h-auto left-0 right-0 bottom-0 bg-black p-4 rounded-t-3xl `}
+          }  absolute z-10 h-auto overflow-hidden  left-0 right-0 bottom-0 bg-black p-4 rounded-t-3xl `}
           onAnimationEnd={() => {
             if (!addBalance) setShowAnimOut(false);
           }}
@@ -299,7 +269,6 @@ export default function Headers({ setOverlay, setNewData }) {
                       name="admin"
                       placeholder="admin"
                       className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                      required
                     />
                   </label>
                 </div>
@@ -480,7 +449,6 @@ export default function Headers({ setOverlay, setNewData }) {
                       name="admin"
                       placeholder="admin"
                       className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                      required
                     />
                   </label>
                 </div>

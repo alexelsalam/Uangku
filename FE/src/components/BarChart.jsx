@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import apiData from "../Data/apiData";
 
 // #region Sample data
 const dummyData = [
@@ -128,23 +129,8 @@ const BarChartWithMultiXAxis = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     (async () => {
-      try {
-        const data = await fetch("/transactions/data/bar", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await data.json();
-        if (!data.ok) {
-          throw new Error(`Error: ${result.message}`);
-        }
-        // console.log(result);
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      const result = await apiData("data/bar");
+      setData(result);
     })();
   }, []);
   return (

@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import { useAppStore } from "../store/store";
+import apiData from "../Data/apiData";
 // import apiData from "../Data/apiData";
 export default function DetailTransaksi({
   item,
@@ -12,17 +13,7 @@ export default function DetailTransaksi({
   const deleteHandle = async (id) => {
     // Handle delete logic here
     try {
-      const res = await fetch(`/transactions/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`Server error ${res.status}: ${text}`);
-      }
+      await apiData(id, null, "DELETE");
     } catch (err) {
       console.error("Submit error:", err);
       alert("Gagal menghapus data");
@@ -40,7 +31,7 @@ export default function DetailTransaksi({
       <div
         key={item.id}
         className={`${isDetail ? "animate-fadeInUp" : "animate-fadeInDown"} 
-                    fixed z-[9999] h-auto left-0 right-0 bottom-0 bg-black p-4 rounded-t-3xl `}
+                    fixed z-[9999] md:w-sm md:mx-auto h-auto left-0 right-0 bottom-0 bg-black p-4 rounded-t-3xl `}
         onAnimationEnd={() => {
           if (!isDetail) setShowAnimOut(false);
         }}

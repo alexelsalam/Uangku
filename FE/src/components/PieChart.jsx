@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Pie, PieChart } from "recharts";
+import apiData from "../Data/apiData";
 
 // const dummyData = [
 //   { nam: "Group A", value: 400, fill: "#0088FE" },
@@ -18,17 +19,7 @@ export default function PieChartWithPaddingAngle({
 
     (async () => {
       try {
-        const data = await fetch("/transactions/data/pie", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await data.json();
-        if (!data.ok) {
-          throw new Error(`Error: ${result.message}`);
-        }
+        const result = await apiData("data/pie");
         const mapped = (result || []).map((item, index) => ({
           name: item.kategori,
           value: item.jumlah,
@@ -69,7 +60,7 @@ export default function PieChartWithPaddingAngle({
           />
         </PieChart>
       </div>
-      <div className="flex flex-wrap   gap-10 mt-2">
+      <div className="flex-wrap flex  gap-2 items-center justify-start mt-2">
         {data.map((item, index) => (
           <div key={index} className="m-2">
             <div

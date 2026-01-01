@@ -49,6 +49,12 @@
     }
   }
 }
+html {
+  /* pastikan ruang scrollbar selalu tersedia */
+  overflow-y: hidden;
+  /* modern browsers: jaga gutter scrollbar tetap stabil */
+  scrollbar-gutter: stable;
+}
 html,
 body {
   font-family: var(--font-display);
@@ -83,4 +89,11 @@ input[type="number"] {
 input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px rgb(0 0 0) inset !important; /* bg-green-500 */
   -webkit-text-fill-color: white !important;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

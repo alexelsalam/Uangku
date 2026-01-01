@@ -1,26 +1,18 @@
-export default async function apiData(
-  params,
-  query,
-  methoded = "GET",
-  payload
-) {
+export default async function apiAuth(url, payload) {
   // console.log(method);
-  const url = `/transactions${params ? `/${params}` : ""}${
-    query ? `?${query}` : ""
-  }`;
+
   try {
     const res = await fetch(url, {
-      method: methoded, // Default to GET if method is not provided,
+      method: "POST", // Default to GET if method is not provided,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
-      body: methoded === "POST" ? JSON.stringify(payload) : null,
+      body: JSON.stringify(payload),
     });
     if (!res.ok) {
       throw new Error(`Error: ${result.message}`);
     }
-
     const result = await res.json();
 
     return result;
