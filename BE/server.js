@@ -11,3 +11,5 @@ app.use("/transactions", middleware, transactionsRouter);
 app.get("/", (req, res) => {
   res.send("API Catatan Uang berjalan");
 });
+
+export default app;
