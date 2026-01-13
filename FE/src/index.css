@@ -61,6 +61,13 @@ body {
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 .animate-dropdown-enter {

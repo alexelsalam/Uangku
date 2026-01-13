@@ -1,6 +1,8 @@
 export default async function apiAuth(url, payload) {
+  // const API_BASE = import.meta.env.VITE_API_URL || "";
+  const newURL = `https://uangku-api.vercel.app${url}`;
   try {
-    const res = await fetch(url, {
+    const res = await fetch(newURL, {
       method: "POST", // Default to GET if method is not provided,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
