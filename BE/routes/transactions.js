@@ -1,240 +1,278 @@
 // routes/transactions.js
 import express from "express";
-import db from "../db/database.js";
+import pool from "../lib/db.js";
 const router = express.Router();
-
-// Ambil transaksi berdasarkan rentang tanggal
-router.get("/date", (req, res) => {
-  const username = req.user; // Menggunakan user_id dari middleware
-  const { start, end } = req.query;
-  console.log("Start:", start, "End:", end);
-  if (!start || !end) {
-    return res
-      .status(400)
-      .json({ error: "Parameter start dan end harus disertakan" });
-  }
-
-  const query = `
-    SELECT * FROM transactions 
-    WHERE users_id = ? AND tanggal BETWEEN ? AND ?
-    ORDER BY tanggal ASC
-  `;
-
-  db.all(query, [username, start, end], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(rows);
-  });
-});
-
 // Ambil transaksi berdasarkan kategori
-router.get("/", (req, res) => {
-  const username = req.user;
-  const { id, tipe, kategori, min, max, pembayaran, dari, sampai } = req.query;
-  let query = `SELECT * FROM transactions WHERE users_id = ?`;
-  const params = [username]; // Menggunakan user_id dari middleware
-  if (id) {
-    query += ` AND id = ?`;
-    params.push(id);
-  }
-  if (tipe) {
-    query += ` AND tipe = ?`;
-    params.push(tipe);
-  }
-  if (kategori) {
-    query += ` AND kategori = ?`;
-    params.push(kategori);
-  }
-  if (min && max) {
-    query += ` AND jumlah BETWEEN ? AND ?`;
-    params.push(min, max);
-  }
-  if (pembayaran) {
-    query += ` AND  pembayaran = ?`;
-    params.push(pembayaran);
-  }
-  if (dari && sampai) {
-    query += `AND tanggal BETWEEN ? AND ?`;
-    params.push(dari, sampai);
-  }
+router.get("/", async (req, res) => {
+  try {
+    const userId = req.user; // dari middleware auth
+    const { id, tipe, kategori, min, max, pembayaran, dari, sampai } =
+      req.query;
 
-  query += `ORDER BY tanggal DESC`; // Urutkan berdasarkan tanggal terbaru
+    let query = `
+      SELECT *
+      FROM transactions
+      WHERE users_id = $1
+    `;
 
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+    const params = [userId];
+    let idx = 2; // untuk $2, $3, dst
+
+    if (id) {
+      query += ` AND id = $${idx++}`;
+      params.push(id);
     }
-    res.json(rows);
-  });
+
+    if (tipe) {
+      query += ` AND tipe = $${idx++}`;
+      params.push(tipe);
+    }
+
+    if (kategori) {
+      query += ` AND kategori = $${idx++}`;
+      params.push(kategori);
+    }
+
+    if (min && max) {
+      query += ` AND jumlah BETWEEN $${idx} AND $${idx + 1}`;
+      params.push(min, max);
+      idx += 2;
+    }
+
+    if (pembayaran) {
+      query += ` AND pembayaran = $${idx++}`;
+      params.push(pembayaran);
+    }
+
+    if (dari && sampai) {
+      query += ` AND tanggal BETWEEN $${idx} AND $${idx + 1}`;
+      params.push(dari, sampai);
+      idx += 2;
+    }
+
+    query += ` ORDER BY tanggal DESC`;
+
+    const result = await pool.query(query, params);
+
+    return res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
 });
+
 //jumlah pengeluaran bulan ini
-router.get("/pengeluaran/total", (req, res) => {
-  const now = new Date();
+router.get("/pengeluaran/total", async (req, res) => {
+  try {
+    const now = new Date();
 
-  // ambil bulan dan tahun sekarang
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+    // ambil bulan dan tahun sekarang
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
 
-  // buat rentang tanggal 1 sampai akhir bulan
-  const start = `${year}-${String(month).padStart(2, "0")}-01`;
-  const end = new Date(year, month, 0).toISOString().split("T")[0]; // akhir bulan
+    // buat rentang tanggal 1 sampai akhir bulan
+    const start = `${year}-${String(month).padStart(2, "0")}-01`;
+    const end = new Date(year, month, 0).toISOString().split("T")[0]; // akhir bulan
 
-  const query = `
-    SELECT SUM(jumlah) AS total
-    FROM transactions
-    WHERE users_id = ? AND tipe = 'Pengeluaran'
-    AND tanggal BETWEEN ? AND ?
-  `;
+    const query = `
+      SELECT COALESCE(SUM(jumlah), 0) AS total
+      FROM transactions
+      WHERE users_id = $1 AND tipe = 'Pengeluaran'
+      AND tanggal BETWEEN $2 AND $3
+    `;
 
-  db.get(query, [req.user, start, end], (err, row) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ month: `${month}-${year}`, total: row.total || 0 });
-  });
+    const result = await pool.query(query, [req.user, start, end]);
+    const total = result.rows[0]?.total ?? 0;
+
+    res.json({ month: `${month}-${year}`, total });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 // jumlah pemasukan bulan ini
-router.get("/pemasukan/total", (req, res) => {
-  const now = new Date();
+router.get("/pemasukan/total", async (req, res) => {
+  try {
+    const now = new Date();
 
-  // ambil bulan dan tahun sekarang
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+    // ambil bulan dan tahun sekarang
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
 
-  // buat rentang tanggal 1 sampai akhir bulan
-  const start = `${year}-${String(month).padStart(2, "0")}-01`;
-  const end = new Date(year, month, 0).toISOString().split("T")[0]; // akhir bulan
+    // buat rentang tanggal 1 sampai akhir bulan
+    const start = `${year}-${String(month).padStart(2, "0")}-01`;
+    const end = new Date(year, month, 0).toISOString().split("T")[0]; // akhir bulan
 
-  const query = `
-    SELECT SUM(jumlah) AS total
-    FROM transactions
-    WHERE users_id = ? AND tipe = 'Pemasukan'
-    AND tanggal BETWEEN ? AND ?
-  `;
+    const query = `
+      SELECT COALESCE(SUM(jumlah), 0) AS total
+      FROM transactions
+      WHERE users_id = $1 AND tipe = 'Pemasukan'
+      AND tanggal BETWEEN $2 AND $3
+    `;
 
-  db.get(query, [req.user, start, end], (err, row) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ month: `${month}-${year}`, total: row.total || 0 });
-  });
+    const result = await pool.query(query, [req.user, start, end]);
+    const total = result.rows[0]?.total ?? 0;
+
+    res.json({ month: `${month}-${year}`, total });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 // Tambah transaksi
-router.post("/", (req, res) => {
-  const {
-    users_id,
-    tipe,
-    kategori,
-    jumlah,
-    admin,
-    pembayaran,
-    waktu,
-    tanggal,
-    catatan,
-  } = req.body;
-  const query = `INSERT INTO transactions (users_id,tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)`;
-  const values = [
-    users_id,
-    tipe,
-    kategori,
-    jumlah,
-    admin,
-    pembayaran,
-    waktu,
-    tanggal,
-    catatan,
-  ];
+router.post("/", async (req, res) => {
+  try {
+    const {
+      users_id,
+      tipe,
+      kategori,
+      jumlah,
+      admin,
+      pembayaran,
+      waktu,
+      tanggal,
+      catatan,
+    } = req.body;
+    const query = `INSERT INTO transactions (users_id,tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)`;
+    const values = [
+      users_id,
+      tipe,
+      kategori,
+      jumlah,
+      admin,
+      pembayaran,
+      waktu,
+      tanggal,
+      catatan,
+    ];
+    const result = await pool.query(query, values);
 
-  db.run(query, values, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ id: this.lastID });
-  });
+    res.status(201).json({
+      message: "Transaksi berhasil ditambahkan",
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 // DELETE (delete transaction by id)
-router.delete("/:id", (req, res) => {
-  const username = req.user; // Menggunakan user_id dari middleware
-  const { id } = req.params;
+router.delete("/:id", async (req, res) => {
+  try {
+    const username = req.user; // Menggunakan user_id dari middleware
+    const { id } = req.params;
+    if (!username || !id) {
+      return res.status(400).json({ message: "Username atau ID tidak valid" });
+    }
+    const query = `DELETE FROM transactions WHERE users_id = $1 AND id = $2`;
 
-  const query = `DELETE FROM transactions WHERE users_id = ? AND id = ?`;
-
-  db.run(query, [username, id], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    if (this.changes === 0)
-      return res.status(404).json({ message: "Transaksi tidak ada" });
-    res.json({ message: "transaksi berhasil dihapus" });
-  });
+    const result = await pool.query(query, [username, id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Transaksi tidak ditemukan" });
+    }
+    res.status(200).json({ message: "Transaksi berhasil dihapus" });
+  } catch (error) {
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // EDIT (update transaction by id)
-router.put("/:id", (req, res) => {
-  const { tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan } =
-    req.body;
-  const { id } = req.params;
+router.put("/:id", async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-  const query = `UPDATE transactions SET tipe = ?, kategori = ?, jumlah = ?, admin = ?, pembayaran = ?, waktu = ?, tanggal = ?, catatan = ? WHERE id = ?`;
+    // Validasi input
+    const {
+      tipe,
+      kategori,
+      jumlah,
+      admin,
+      pembayaran,
+      waktu,
+      tanggal,
+      catatan,
+    } = req.body;
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "ID transaksi tidak valid" });
+    }
 
-  const values = [
-    tipe,
-    kategori,
-    jumlah,
-    admin,
-    pembayaran,
-    waktu,
-    tanggal,
-    catatan,
-    id,
-  ];
+    const query = `UPDATE transactions SET tipe = $1, kategori = $2, jumlah = $3, admin = $4, pembayaran = $5, waktu = $6, tanggal = $7, catatan = $8 WHERE id = $9 AND users_id = $10`;
 
-  db.run(query, values, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    if (this.changes === 0)
-      return res.status(404).json({ message: "Transaksi tidak ada" });
-    res.json({ message: "Transaksi berhasil diperbarui" });
-  });
+    const values = [
+      tipe,
+      kategori,
+      jumlah,
+      admin,
+      pembayaran,
+      waktu,
+      tanggal,
+      catatan,
+      id,
+      req.user, // pastikan hanya pemilik yang bisa mengubah
+    ];
+    const result = await pool.query(query, values);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Transaksi tidak ditemukan" });
+    }
+
+    // Jika berhasil, kirim respons sukses
+    res.status(200).json({ message: "Transaksi berhasil diperbarui" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 // Ambil data untuk grafik bar
-router.get("/data/bar", (req, res) => {
-  const query = `
+router.get("/data/bar", async (req, res) => {
+  try {
+    const query = `
    SELECT
-  strftime('%Y-%m', tanggal) AS date,
-  SUM(CASE WHEN tipe = 'Pengeluaran' THEN jumlah ELSE 0 END) AS Pengeluaran,
-  SUM(CASE WHEN tipe = 'Pemasukan' THEN jumlah ELSE 0 END) AS Pemasukan
-FROM transactions
-WHERE users_id = ?
-  AND strftime('%Y', tanggal) = strftime('%Y', 'now')
-GROUP BY date
-ORDER BY date;
-
+        to_char(tanggal::date, 'YYYY-MM') AS date,
+        COALESCE(SUM(CASE WHEN tipe = 'Pengeluaran' THEN jumlah ELSE 0 END), 0) AS pengeluaran,
+        COALESCE(SUM(CASE WHEN tipe = 'Pemasukan' THEN jumlah ELSE 0 END), 0) AS pemasukan
+      FROM transactions
+      WHERE users_id = $1
+        AND EXTRACT(YEAR FROM tanggal::date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      GROUP BY to_char(tanggal::date, 'YYYY-MM')
+      ORDER BY to_char(tanggal::date, 'YYYY-MM');
   `;
 
-  db.all(query, [req.user], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
-    res.json(rows);
-  });
+
+    const result = await pool.query(query, [req.user]);
+    console.log(result);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No data found for this user" });
+    }
+    res.json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 // Ambil data untuk grafik pie
-router.get("/data/pie", (req, res) => {
-  const query = `
- SELECT
-  kategori,
-  SUM(jumlah) AS jumlah
-FROM transactions
-WHERE users_id = ?
-  AND tipe = 'Pengeluaran'
-  AND strftime('%Y-%m', tanggal) = strftime('%Y-%m', 'now')
-GROUP BY kategori
-ORDER BY jumlah DESC;
+router.get("/data/pie", async (req, res) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    const query = `
+      SELECT
+        kategori,
+        COALESCE(SUM(jumlah), 0) AS jumlah
+      FROM transactions
+      WHERE users_id = $1
+        AND tipe = 'Pengeluaran'
+        AND to_char(tanggal::date, 'YYYY-MM') = to_char(CURRENT_DATE, 'YYYY-MM')
+      GROUP BY kategori
+      ORDER BY jumlah DESC;
+    `;
 
-`;
-
-  db.all(query, [req.user], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(rows);
-  });
+    const result = await pool.query(query, [req.user]);
+    return res.json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 export default router;

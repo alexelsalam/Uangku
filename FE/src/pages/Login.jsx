@@ -1,4 +1,4 @@
-import apiAuth from "../Data/apiAuth";
+import apiAuth from "../api/apiAuth";
 
 export default function Login() {
   const handleLogin = async (e) => {
@@ -6,7 +6,7 @@ export default function Login() {
     const fd = new FormData(e.target);
     const { username, password } = Object.fromEntries(fd.entries());
     try {
-      const data = await apiAuth("/userLogin", {
+      const data = await apiAuth("/authLogin", {
         username,
         password,
       });

@@ -1,37 +1,13 @@
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import CustomSelectPayment from "./CustomselectPayment";
-import CustomSelectCategory from "./CustomSelectCategory";
-// import apiData from "../Data/apiData";
 import { useAppStore } from "../store/store.js";
 import Logout from "./Logout.jsx";
 import { jwtDecode } from "jwt-decode";
-import Cash from "../icons/icons_pendapatan/Cash.jsx";
-import Pasif from "../icons/icons_pendapatan/Pasif.jsx";
-import SideJob from "../icons/icons_pendapatan/SideJob.jsx";
-import Freelance from "../icons/icons_pendapatan/Freelance.jsx";
-import FnB from "../icons/icons_pengeluaran/FnB.jsx";
-import Pulsa from "../icons/icons_pengeluaran/Pulsa.jsx";
-import Internet from "../icons/icons_pengeluaran/Internet.jsx";
-import Bensin from "../icons/icons_pengeluaran/Bensin.jsx";
-import Liburan from "../icons/icons_pengeluaran/Liburan.jsx";
-import Kesehatan from "../icons/icons_pengeluaran/Kesehatan.jsx";
-import Hiburan from "../icons/icons_pengeluaran/Hiburan.jsx";
-import Kecantikan from "../icons/icons_pengeluaran/Kecantikan.jsx";
-import Transportasi from "../icons/icons_pengeluaran/Transportasi.jsx";
-import Pakaian from "../icons/icons_pengeluaran/Pakaian.jsx";
-import Service from "../icons/icons_pengeluaran/Service.jsx";
-import Pajak from "../icons/icons_pengeluaran/Pajak.jsx";
-import Darurat from "../icons/icons_pengeluaran/Darurat.jsx";
-import Pendidikan from "../icons/icons_pengeluaran/Pendidikan.jsx";
-import Lainnya from "../icons/icons_pengeluaran/Lainnya.jsx";
-import Tagihan from "../icons/icons_pengeluaran/Tagihan.jsx";
-import Belanja from "../icons/icons_pengeluaran/Belanja.jsx";
-import Investasi from "../icons/icons_pengeluaran/Investasi.jsx";
-import Asuransi from "../icons/icons_pengeluaran/Asuransi.jsx";
 import Profile from "../icons/Profile.jsx";
 import WarningSpend from "./WarningSpend.jsx";
-import apiData from "../Data/apiData.js";
+import apiData from "../api/apiData.js";
+import FormPemasukan from "./FormPemasukan.jsx";
+import FormPengeluaran from "./FormPengeluaran.jsx";
 
 export default function Headers({ setOverlay, setNewData }) {
   const [addBalance, setAddBalance] = useState(false);
@@ -90,9 +66,8 @@ export default function Headers({ setOverlay, setNewData }) {
           "0"
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
-      const res = await apiData(null, null, "POST", payload);
+      await apiData(null, null, "POST", payload);
 
-      console.log("Transaction created:", res);
       // close form and optionally reset values
       setAddBalance(false);
       setShowAnimOut(false);
@@ -200,275 +175,21 @@ export default function Headers({ setOverlay, setNewData }) {
           </div>
           {/* form /-*/}
           {formPage ? (
-            <div className="mt-4 ">
-              <form onSubmit={handleSubmit}>
-                <label htmlFor="Kategori">
-                  <CustomSelectCategory
-                    options={[
-                      {
-                        value: "gaji",
-                        label: "gaji",
-                        icon: <Cash />,
-                        color: "#67AE6E",
-                      },
-                      {
-                        value: "pasif",
-                        label: "pasif",
-                        icon: <Pasif />,
-                        color: "#B12C00",
-                      },
-                      {
-                        value: "side",
-                        label: "side job",
-                        icon: <SideJob />,
-                        color: "#3D74B6",
-                      },
-                      {
-                        value: "freelance",
-                        label: "freelance",
-                        icon: <Freelance />,
-                        color: "#E9762B",
-                      },
-                    ]}
-                    placeholder="Pilih Kategori"
-                    value={valueCategory}
-                    onChange={(v) => {
-                      // handle change
-                      setValueCategory(v);
-                    }}
-                    className="mb-3"
-                    outlineClass="focus:ring-2 focus:ring-[#00CBA9]"
-                  />
-                </label>
-                <label htmlFor="pembayaran">
-                  <CustomSelectPayment
-                    value={valuePayment}
-                    onChange={(v) => {
-                      // handle change
-                      setValuePayment(v);
-                    }}
-                    placeholder="Pilih Pembayaran"
-                    outlineClass="focus:ring-2 focus:ring-[#00CBA9]"
-                  />
-                </label>
-                <div className="flex gap-4">
-                  <label htmlFor="jumlah" className="block mt-4">
-                    <input
-                      type="number"
-                      id="jumlah"
-                      name="jumlah"
-                      placeholder="Jumlah"
-                      className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                      required
-                    />
-                  </label>
-                  <label htmlFor="admin" className="block mt-4">
-                    <input
-                      type="text"
-                      id="admin"
-                      name="admin"
-                      placeholder="admin"
-                      className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                    />
-                  </label>
-                </div>
-                <label htmlFor="catatan">
-                  <textarea
-                    id="catatan"
-                    name="catatan"
-                    placeholder="Catatan"
-                    className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9] mt-4 resize-none"
-                    rows="3"
-                  ></textarea>
-                </label>
-                <button
-                  type="submit"
-                  className="w-full border-2 border-[#00B89F] text-white hover:text-black font-medium rounded-md p-2 mt-16 hover:bg-[#00B89F] transition-colors duration-300"
-                >
-                  Simpan
-                </button>
-              </form>
-            </div>
+            <FormPemasukan
+              handleSubmit={handleSubmit}
+              valuePayment={valuePayment}
+              setValuePayment={setValuePayment}
+              valueCategory={valueCategory}
+              setValueCategory={setValueCategory}
+            />
           ) : (
-            <div className="mt-4 ">
-              <form onSubmit={handleSubmit}>
-                <label htmlFor="Kategori">
-                  <CustomSelectCategory
-                    options={[
-                      {
-                        value: "FnB",
-                        label: "FnB",
-                        icon: <FnB />,
-                        color: "#205781",
-                      },
-                      {
-                        value: "pulsa",
-                        label: "pulsa",
-                        icon: <Pulsa />,
-                        color: "#437057",
-                      },
-                      {
-                        value: "internet",
-                        label: "internet",
-                        icon: <Internet />,
-                        color: "#67AE6E",
-                      },
-                      {
-                        value: "bensin",
-                        label: "bensin",
-                        icon: <Bensin />,
-                        color: "#8A0000",
-                      },
-                      {
-                        value: "liburan",
-                        label: "liburan",
-                        icon: <Liburan />,
-                        color: "#3B9797",
-                      },
-                      {
-                        value: "kesehatan",
-                        label: "kesehatan",
-                        icon: <Kesehatan />,
-                        color: "#3D74B6",
-                      },
-                      {
-                        value: "tagihan",
-                        label: "tagihan",
-                        icon: <Tagihan />,
-                        color: "#CF0F47",
-                      },
-                      {
-                        value: "belanja",
-                        label: "belanja",
-                        icon: <Belanja />,
-                        color: "#0D4715",
-                      },
-                      {
-                        value: "hiburan",
-                        label: "hiburan",
-                        icon: <Hiburan />,
-                        color: "#4A9782",
-                      },
-                      {
-                        value: "kecantikan",
-                        label: "kecantikan",
-                        icon: <Kecantikan />,
-                        color: "#DB6B97",
-                      },
-                      {
-                        value: "transportasi",
-                        label: "transportasi",
-                        icon: <Transportasi />,
-                        color: "#547792",
-                      },
-                      {
-                        value: "pakaian",
-                        label: "pakaian",
-                        icon: <Pakaian />,
-                        color: "#48A6A7",
-                      },
-                      {
-                        value: "service",
-                        label: "service",
-                        icon: <Service />,
-                        color: "#E9762B",
-                      },
-                      {
-                        value: "investasi",
-                        label: "investasi",
-                        icon: <Investasi />,
-                        color: "#00712D",
-                      },
-                      {
-                        value: "asuransi",
-                        label: "asuransi",
-                        icon: <Asuransi />,
-                        color: "#123458",
-                      },
-                      {
-                        value: "pajak",
-                        label: "pajak",
-                        icon: <Pajak />,
-                        color: "#E9762B",
-                      },
-                      {
-                        value: "darurat",
-                        label: "darurat",
-                        icon: <Darurat />,
-                        color: "#B12C00",
-                      },
-                      {
-                        value: "pendidikan",
-                        label: "pendidikan",
-                        icon: <Pendidikan />,
-                        color: "#279EFF",
-                      },
-                      {
-                        value: "lainnya",
-                        label: "lainnya",
-                        icon: <Lainnya />,
-                        color: "#748873",
-                      },
-                    ]}
-                    placeholder="Pilih Kategori"
-                    value={valueCategory}
-                    onChange={(v) => {
-                      // handle change
-                      setValueCategory(v);
-                    }}
-                    className="mb-3"
-                    outlineClass="focus:ring-2 focus:ring-[#00CBA9]"
-                  />
-                </label>
-                <label htmlFor="pembayaran">
-                  <CustomSelectPayment
-                    value={valuePayment}
-                    onChange={(v) => {
-                      // handle change
-                      setValuePayment(v);
-                    }}
-                    placeholder="Pilih Pembayaran"
-                    outlineClass="focus:ring-2 focus:ring-[#00CBA9]"
-                  />
-                </label>
-                <div className="flex gap-4">
-                  <label htmlFor="jumlah" className="block mt-4">
-                    <input
-                      type="number"
-                      id="jumlah"
-                      name="jumlah"
-                      placeholder="Jumlah"
-                      className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                      required
-                    />
-                  </label>
-                  <label htmlFor="admin" className="block mt-4">
-                    <input
-                      type="text"
-                      id="admin"
-                      name="admin"
-                      placeholder="admin"
-                      className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9]"
-                    />
-                  </label>
-                </div>
-                <label htmlFor="catatan">
-                  <textarea
-                    id="catatan"
-                    name="catatan"
-                    placeholder="Catatan"
-                    className="w-full bg-[#222] text-white rounded-md p-2 outline-none focus:ring-2 focus:ring-[#00CBA9] mt-4 resize-none"
-                    rows="3"
-                  ></textarea>
-                </label>
-                <button
-                  type="submit"
-                  className="w-full border-2 border-[#B12C00] text-white hover:text-black font-medium rounded-md p-2 mt-16 hover:bg-[#B12C00] transition-colors duration-300"
-                >
-                  Simpan
-                </button>
-              </form>
-            </div>
+            <FormPengeluaran
+              handleSubmit={handleSubmit}
+              valuePayment={valuePayment}
+              setValuePayment={setValuePayment}
+              valueCategory={valueCategory}
+              setValueCategory={setValueCategory}
+            />
           )}
         </div>
       )}

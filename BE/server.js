@@ -12,7 +12,3 @@ app.use("/transactions", middleware, transactionsRouter);
 app.get("/", (req, res) => {
   res.send("API Catatan Uang berjalan");
 });
-
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});

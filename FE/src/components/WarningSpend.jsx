@@ -1,4 +1,4 @@
-import apiData from "../Data/apiData.js";
+import apiData from "../api/apiData.js";
 import Alarm from "../icons/Alarm.jsx";
 import { useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ export default function WarningSpend() {
   return isOpen ? (
     <div className="relative">
       <div className="w-64 h-20 bg-white rounded-md shadow-lg absolute  -top-4 right-3 flex items-center justify-center text-black">
-        <div className="text-[0.5rem] text-black absolute top-2 left-2">
+        <div className="text-sm text-black absolute top-2 left-2">
           <p>Batas Pengeluaran</p>
           <p>Bulan {date}</p>
         </div>

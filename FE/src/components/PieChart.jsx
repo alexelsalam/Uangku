@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Pie, PieChart } from "recharts";
-import apiData from "../Data/apiData";
+import apiData from "../api/apiData";
 
 // const dummyData = [
 //   { nam: "Group A", value: 400, fill: "#0088FE" },

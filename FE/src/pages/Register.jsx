@@ -1,4 +1,4 @@
-import apiAuth from "../Data/apiAuth";
+import apiAuth from "../api/apiAuth.js";
 
 export default function Register() {
   const handleRegister = async (e) => {
@@ -7,7 +7,7 @@ export default function Register() {
     const password = e.target.password.value;
 
     try {
-      await apiAuth("/userRegister", {
+      await apiAuth("/authRegister", {
         username,
         password,
       });

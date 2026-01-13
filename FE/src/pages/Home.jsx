@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Headers from "../components/Headers";
 import { Nav } from "../components/Nav";
 import TransactionsList from "../components/TransactionsList";
-import apiData from "../Data/apiData.js";
+import apiData from "../api/apiData.js";
 import groupByDate from "../utils/GrupByDate.js";
 
 export default function Home() {

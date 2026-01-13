@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { useAppStore } from "../store/store";
-import apiData from "../Data/apiData";
+import apiData from "../api/apiData";
 // import apiData from "../Data/apiData";
 export default function DetailTransaksi({
   item,

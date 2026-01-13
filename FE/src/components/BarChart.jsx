@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import apiData from "../Data/apiData";
+import apiData from "../api/apiData.js";
 
 // #region Sample data
 const dummyData = [

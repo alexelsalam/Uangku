@@ -14,13 +14,13 @@ export default defineConfig({
         secure: false,
         rewrite: (p) => p.replace(/^\/transactions/, "/transactions"),
       },
-      "/userLogin": {
+      "/authLogin": {
         target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,
         rewrite: (p) => p.replace(/^\/login/, "/login"),
       },
-      "/userRegister": {
+      "/authRegister": {
         target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,
