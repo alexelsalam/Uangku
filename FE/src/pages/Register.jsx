@@ -7,11 +7,13 @@ export default function Register() {
     const password = e.target.password.value;
 
     try {
-      await apiAuth("/authRegister", {
+      const result = await apiAuth("/authRegister", {
         username,
         password,
       });
-
+      if (!result) {
+        throw new Error("Registration failed");
+      }
       alert("Registration successful!");
       window.location.href = "/login"; // Redirect to login page after successful registration
     } catch (error) {

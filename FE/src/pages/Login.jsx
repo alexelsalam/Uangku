@@ -10,6 +10,7 @@ export default function Login() {
         username,
         password,
       });
+
       if (data.token) {
         localStorage.setItem("token", data.token);
         window.location.href = "/home";
