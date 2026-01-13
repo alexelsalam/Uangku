@@ -1,6 +1,5 @@
 import express from "express";
 const app = express();
-const PORT = 3000;
 import transactionsRouter from "./routes/transactions.js";
 import authRouter from "./routes/auth.js";
 import middleware from "./middleware/middleware.js";
