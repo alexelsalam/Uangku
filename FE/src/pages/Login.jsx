@@ -25,11 +25,7 @@ export default function Login() {
     <div className=" h-screen bg-black md:w-sm md:mx-auto md:rounded-lg md:shadow-lg">
       <div className="relative bg-primary h-1/6"></div> {/* wave vektor */}
       <div className="-mt-1">
-        <img
-          src="../src/assets/Vector.svg"
-          alt="wave vektor"
-          className="w-full"
-        />
+        <img src="/vector.svg" alt="wave_vektor" className="w-full" />
       </div>
       <div className="mt-6 border-2 rounded-2xl border-primary w-[337px] h-[383px] mx-auto drop-shadow-[0_0_10px_#00cba9]">
         <p className="text-primary font-light  text-4xl text-center pt-10">

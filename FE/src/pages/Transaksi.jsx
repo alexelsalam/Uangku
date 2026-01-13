@@ -85,11 +85,7 @@ export function Transaksi() {
       {/* bg */}
       <div className="bg-primary p-4 h-1/2 "></div>
       <div className="-mt-1">
-        <img
-          src="../src/assets/Vector.svg"
-          alt="wave vektor"
-          className="w-full"
-        />
+        <img src="/vector.svg" alt="wave-vektor" className="w-full" />
       </div>
       {/* filter comp*/}
       {(filter || showAnimOut) && (

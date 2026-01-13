@@ -27,11 +27,7 @@ export function Data() {
       {/* bg */}
       <div className="bg-primary p-4 h-2/3 "></div>
       <div className="-mt-1">
-        <img
-          src="../src/assets/Vector.svg"
-          alt="wave vektor"
-          className="w-full"
-        />
+        <img src="/vector.svg" alt="wave-vektor" className="w-full" />
       </div>
       <Nav />
     </div>

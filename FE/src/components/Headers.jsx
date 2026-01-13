@@ -127,11 +127,7 @@ export default function Headers({ setOverlay, setNewData }) {
       </div>
       {/* wave vektor */}
       <div className="-mt-1">
-        <img
-          src="../src/assets/Vector.svg"
-          alt="wave vektor"
-          className="w-full"
-        />
+        <img src="/vector.svg" alt="wave-vektor" className="w-full" />
       </div>
       {/* addBalance */}
       {(addBalance || showAnimOut) && (

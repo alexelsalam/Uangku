@@ -1,6 +1,4 @@
 export default async function apiAuth(url, payload) {
-  // console.log(method);
-
   try {
     const res = await fetch(url, {
       method: "POST", // Default to GET if method is not provided,

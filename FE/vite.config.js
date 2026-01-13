@@ -9,19 +9,19 @@ export default defineConfig({
     proxy: {
       // semua request /api ke backend di port 3000
       "/transactions": {
-        target: "http://localhost:3000",
+        target: "https://uangku-api.vercel.app",
         changeOrigin: true,
         secure: false,
         rewrite: (p) => p.replace(/^\/transactions/, "/transactions"),
       },
       "/authLogin": {
-        target: "http://localhost:3000",
+        target: "https://uangku-api.vercel.app",
         changeOrigin: true,
         secure: false,
         rewrite: (p) => p.replace(/^\/login/, "/login"),
       },
       "/authRegister": {
-        target: "http://localhost:3000",
+        target: "https://uangku-api.vercel.app",
         changeOrigin: true,
         secure: false,
         rewrite: (p) => p.replace(/^\/register/, "/register"),
