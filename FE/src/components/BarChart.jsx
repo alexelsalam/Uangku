@@ -11,71 +11,6 @@ import {
 } from "recharts";
 import apiData from "../api/apiData";
 
-// #region Sample data
-const dummyData = [
-  {
-    date: "2000-01",
-    pengeluaran: 80000,
-    pemasukan: 1000000,
-  },
-  {
-    date: "2000-02",
-    pengeluaran: 300000,
-    pemasukan: 139800,
-  },
-  {
-    date: "2000-03",
-    pengeluaran: 2000000,
-    pemasukan: 2500000,
-  },
-  {
-    date: "2000-04",
-    pengeluaran: 2700080,
-    pemasukan: 3900008,
-  },
-  {
-    date: "2000-05",
-    pengeluaran: 1000890,
-    pemasukan: 4800000,
-  },
-  {
-    date: "2000-06",
-    pengeluaran: 2000390,
-    pemasukan: 3800000,
-  },
-  {
-    date: "2000-07",
-    pengeluaran: 3000490,
-    pemasukan: 4300000,
-  },
-  {
-    date: "2000-08",
-    pengeluaran: 4000000,
-    pemasukan: 2400000,
-  },
-  {
-    date: "2000-09",
-    pengeluaran: 3000000,
-    pemasukan: 1300098,
-  },
-  {
-    date: "2000-10",
-    pengeluaran: 2000000,
-    pemasukan: 9800000,
-  },
-  {
-    date: "2000-11",
-    pengeluaran: 2000780,
-    pemasukan: 3900008,
-  },
-  {
-    date: "2000-12",
-    pengeluaran: 1000890,
-    pemasukan: 4800000,
-  },
-];
-
-// #endregion
 const monthTickFormatter = (tick) => {
   const date = new Date(tick);
 
@@ -135,64 +70,72 @@ const BarChartWithMultiXAxis = () => {
     })();
   }, []);
   return (
-    <BarChart
-      style={{
-        width: "100%",
-        maxWidth: "700px",
-        maxHeight: "70vh",
-        aspectRatio: 1.618,
-      }}
-      responsive
-      data={data.length > 0 ? data : dummyData} // gunakan data dari API atau dummyData jika tidak ada
-      margin={{
-        top: 25,
-        right: 0,
-        left: 0,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-      <XAxis
-        dataKey="date"
-        tickFormatter={monthTickFormatter}
-        tick={{ fill: "#fff" }} // ubah warna teks bulan jadi putih
-        tickMargin={5}
-        axisLine={{ stroke: "#fff" }} // optional: garis sumbu putih
-        tickLine={{ stroke: "#fff" }}
-      />
-      <XAxis
-        dataKey="date"
-        axisLine={false}
-        tickLine={false}
-        interval={0}
-        tick={renderQuarterTick}
-        height={1}
-        scale="band"
-        xAxisId="quarter"
-      />
-      <YAxis
-        width="auto"
-        tickFormatter={formatNumberShort}
-        tick={{ fill: "#fff" }} // ubah warna teks nominal jadi putih
-        axisLine={{ stroke: "#fff" }}
-        tickLine={{ stroke: "#fff" }}
-      />
-      <Tooltip
-        formatter={(value) => `Rp${formatNumberShort(value)}`} // tampilkan prefix Rp
-        contentStyle={{
-          backgroundColor: "#000", // background hitam
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 8,
-          padding: "8px 10px",
-        }}
-        labelStyle={{ color: "#fff", fontSize: 12 }}
-        itemStyle={{ color: "#fff", fontWeight: 600 }}
-        cursor={{ fill: "rgba(255,255,255,0.04)" }} // hover vertical highlight
-      />
-      <Legend wrapperStyle={{ paddingTop: "1em" }} />
-      <Bar dataKey="pemasukan" fill="#328E6E" radius={[8, 8, 0, 0]} />
-      <Bar dataKey="pengeluaran" fill="#CF0F47" radius={[8, 8, 0, 0]} />
-    </BarChart>
+    <>
+      {data > 0 ? (
+        <BarChart
+          style={{
+            width: "100%",
+            maxWidth: "700px",
+            maxHeight: "70vh",
+            aspectRatio: 1.618,
+          }}
+          responsive
+          data={data} // gunakan data dari API atau dummyData jika tidak ada
+          margin={{
+            top: 25,
+            right: 0,
+            left: 0,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickFormatter={monthTickFormatter}
+            tick={{ fill: "#fff" }} // ubah warna teks bulan jadi putih
+            tickMargin={5}
+            axisLine={{ stroke: "#fff" }} // optional: garis sumbu putih
+            tickLine={{ stroke: "#fff" }}
+          />
+          <XAxis
+            dataKey="date"
+            axisLine={false}
+            tickLine={false}
+            interval={0}
+            tick={renderQuarterTick}
+            height={1}
+            scale="band"
+            xAxisId="quarter"
+          />
+          <YAxis
+            width="auto"
+            tickFormatter={formatNumberShort}
+            tick={{ fill: "#fff" }} // ubah warna teks nominal jadi putih
+            axisLine={{ stroke: "#fff" }}
+            tickLine={{ stroke: "#fff" }}
+          />
+          <Tooltip
+            formatter={(value) => `Rp${formatNumberShort(value)}`} // tampilkan prefix Rp
+            contentStyle={{
+              backgroundColor: "#000", // background hitam
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 8,
+              padding: "8px 10px",
+            }}
+            labelStyle={{ color: "#fff", fontSize: 12 }}
+            itemStyle={{ color: "#fff", fontWeight: 600 }}
+            cursor={{ fill: "rgba(255,255,255,0.04)" }} // hover vertical highlight
+          />
+          <Legend wrapperStyle={{ paddingTop: "1em" }} />
+          <Bar dataKey="pemasukan" fill="#328E6E" radius={[8, 8, 0, 0]} />
+          <Bar dataKey="pengeluaran" fill="#CF0F47" radius={[8, 8, 0, 0]} />
+        </BarChart>
+      ) : (
+        <div className="text-center text-gray-400 py-8">
+          Belum ada data transaksi
+        </div>
+      )}
+    </>
   );
 };
 

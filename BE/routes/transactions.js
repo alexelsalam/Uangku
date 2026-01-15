@@ -250,10 +250,8 @@ ORDER BY to_char(tanggal::date, 'YYYY-MM');
     }
 
     const result = await pool.query(query, [req.user]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "No data found for this user" });
-    }
-    res.json(result.rows);
+
+    return res.json(result.rows);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -276,6 +274,7 @@ router.get("/data/pie", async (req, res) => {
     `;
 
     const result = await pool.query(query, [req.user]);
+
     return res.json(result.rows);
   } catch (error) {
     return res.status(500).json({ error: error.message });
