@@ -7,7 +7,6 @@ import {
 import Home from "./pages/Home.jsx";
 import { Transaksi } from "./pages/Transaksi.jsx";
 import { Data } from "./pages/Data.jsx";
-// import { Nav } from "./components/Nav.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Middleware from "./utils/Middleware.jsx";
