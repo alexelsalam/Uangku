@@ -9,69 +9,69 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import apiData from "../api/apiData.js";
+import apiData from "../api/apiData";
 
 // #region Sample data
 const dummyData = [
   {
     date: "2000-01",
-    Pengeluaran: 80000,
-    Pemasukan: 1000000,
+    pengeluaran: 80000,
+    pemasukan: 1000000,
   },
   {
     date: "2000-02",
-    Pengeluaran: 300000,
-    Pemasukan: 139800,
+    pengeluaran: 300000,
+    pemasukan: 139800,
   },
   {
     date: "2000-03",
-    Pengeluaran: 2000000,
-    Pemasukan: 2500000,
+    pengeluaran: 2000000,
+    pemasukan: 2500000,
   },
   {
     date: "2000-04",
-    Pengeluaran: 2700080,
-    Pemasukan: 3900008,
+    pengeluaran: 2700080,
+    pemasukan: 3900008,
   },
   {
     date: "2000-05",
-    Pengeluaran: 1000890,
-    Pemasukan: 4800000,
+    pengeluaran: 1000890,
+    pemasukan: 4800000,
   },
   {
     date: "2000-06",
-    Pengeluaran: 2000390,
-    Pemasukan: 3800000,
+    pengeluaran: 2000390,
+    pemasukan: 3800000,
   },
   {
     date: "2000-07",
-    Pengeluaran: 3000490,
-    Pemasukan: 4300000,
+    pengeluaran: 3000490,
+    pemasukan: 4300000,
   },
   {
     date: "2000-08",
-    Pengeluaran: 4000000,
-    Pemasukan: 2400000,
+    pengeluaran: 4000000,
+    pemasukan: 2400000,
   },
   {
     date: "2000-09",
-    Pengeluaran: 3000000,
-    Pemasukan: 1300098,
+    pengeluaran: 3000000,
+    pemasukan: 1300098,
   },
   {
     date: "2000-10",
-    Pengeluaran: 2000000,
-    Pemasukan: 9800000,
+    pengeluaran: 2000000,
+    pemasukan: 9800000,
   },
   {
     date: "2000-11",
-    Pengeluaran: 2000780,
-    Pemasukan: 3900008,
+    pengeluaran: 2000780,
+    pemasukan: 3900008,
   },
   {
     date: "2000-12",
-    Pengeluaran: 1000890,
-    Pemasukan: 4800000,
+    pengeluaran: 1000890,
+    pemasukan: 4800000,
   },
 ];
 
@@ -127,6 +127,7 @@ const formatNumberShort = (num) => {
 
 const BarChartWithMultiXAxis = () => {
   const [data, setData] = useState([]);
+  console.log(data);
   useEffect(() => {
     (async () => {
       const result = await apiData("data/bar");
@@ -142,7 +143,7 @@ const BarChartWithMultiXAxis = () => {
         aspectRatio: 1.618,
       }}
       responsive
-      data={data.length > 0 ? data : dummyData}
+      data={data.length > 0 ? data : dummyData} // gunakan data dari API atau dummyData jika tidak ada
       margin={{
         top: 25,
         right: 0,
@@ -189,8 +190,8 @@ const BarChartWithMultiXAxis = () => {
         cursor={{ fill: "rgba(255,255,255,0.04)" }} // hover vertical highlight
       />
       <Legend wrapperStyle={{ paddingTop: "1em" }} />
-      <Bar dataKey="Pemasukan" fill="#328E6E" radius={[8, 8, 0, 0]} />
-      <Bar dataKey="Pengeluaran" fill="#CF0F47" radius={[8, 8, 0, 0]} />
+      <Bar dataKey="pemasukan" fill="#328E6E" radius={[8, 8, 0, 0]} />
+      <Bar dataKey="pengeluaran" fill="#CF0F47" radius={[8, 8, 0, 0]} />
     </BarChart>
   );
 };

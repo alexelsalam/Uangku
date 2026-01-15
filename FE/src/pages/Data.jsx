@@ -1,4 +1,3 @@
-import { Nav } from "../components/Nav";
 import BarChartWithMultiXAxis from "../components/BarChart.jsx";
 import PieChartWithPaddingAngle from "../components/PieChart.jsx";
 
@@ -29,7 +28,6 @@ export function Data() {
       <div className="-mt-1">
         <img src="/vector.svg" alt="wave-vektor" className="w-full" />
       </div>
-      <Nav />
     </div>
   );
 }

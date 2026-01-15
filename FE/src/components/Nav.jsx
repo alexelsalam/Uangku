@@ -9,7 +9,7 @@ export const Nav = () => {
   ];
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-[#222222] rounded-full text-white">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-[#222222] rounded-full text-white z-50">
       <div className="flex justify-center items-center px-4 py-2 gap-4">
         {tabs.map((tab) => {
           const Icon = tab.icon;

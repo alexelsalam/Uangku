@@ -13,6 +13,7 @@ export default function PieChartWithPaddingAngle({
   isAnimationActive = true,
   borderColor = null,
 }) {
+  // console.log(data);
   const [data, setData] = useState([]);
   useEffect(() => {
     const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28DFF"];

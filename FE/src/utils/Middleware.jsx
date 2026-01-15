@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Nav } from "../components/Nav";
 
 export default function Middleware() {
   const isAuthenticated = localStorage.getItem("token");
@@ -6,5 +7,10 @@ export default function Middleware() {
     window.location.href = "/login";
     return null;
   }
-  return <Outlet />;
+  return (
+    <>
+      <Nav />
+      <Outlet />;
+    </>
+  );
 }

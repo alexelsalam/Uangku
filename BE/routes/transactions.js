@@ -227,15 +227,22 @@ router.put("/:id", async (req, res) => {
 router.get("/data/bar", async (req, res) => {
   try {
     const query = `
-   SELECT
-        to_char(tanggal::date, 'YYYY-MM') AS date,
-        COALESCE(SUM(CASE WHEN tipe = 'Pengeluaran' THEN jumlah ELSE 0 END), 0) AS pengeluaran,
-        COALESCE(SUM(CASE WHEN tipe = 'Pemasukan' THEN jumlah ELSE 0 END), 0) AS pemasukan
-      FROM transactions
-      WHERE users_id = $1
-        AND EXTRACT(YEAR FROM tanggal::date) = EXTRACT(YEAR FROM CURRENT_DATE)
-      GROUP BY to_char(tanggal::date, 'YYYY-MM')
-      ORDER BY to_char(tanggal::date, 'YYYY-MM');
+  SELECT
+  to_char(tanggal::date, 'YYYY-MM') AS date,
+  COALESCE(
+    SUM(CASE WHEN tipe = 'Pengeluaran' THEN jumlah ELSE 0 END)::integer,
+    0
+  ) AS Pengeluaran,
+  COALESCE(
+    SUM(CASE WHEN tipe = 'Pemasukan' THEN jumlah ELSE 0 END)::integer,
+    0
+  ) AS Pemasukan
+FROM transactions
+WHERE users_id = $1
+  AND EXTRACT(YEAR FROM tanggal::date) = EXTRACT(YEAR FROM CURRENT_DATE)
+GROUP BY to_char(tanggal::date, 'YYYY-MM')
+ORDER BY to_char(tanggal::date, 'YYYY-MM');
+
   `;
 
     if (!req.user) {
@@ -243,7 +250,6 @@ router.get("/data/bar", async (req, res) => {
     }
 
     const result = await pool.query(query, [req.user]);
-    console.log(result);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "No data found for this user" });
     }
@@ -260,7 +266,7 @@ router.get("/data/pie", async (req, res) => {
     const query = `
       SELECT
         kategori,
-        COALESCE(SUM(jumlah), 0) AS jumlah
+        COALESCE(SUM(jumlah), 0)::integer AS jumlah
       FROM transactions
       WHERE users_id = $1
         AND tipe = 'Pengeluaran'

@@ -70,6 +70,9 @@ export default function Login() {
           </a>
         </p>
       </div>
+      <div className="absolute bottom-0 left-0 right-0 text-center text-xs text-white py-2 bg-black/80">
+        <p>created by PEREK</p>
+      </div>
     </div>
   );
 }

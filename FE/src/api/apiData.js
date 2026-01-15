@@ -6,7 +6,6 @@ export default async function apiData(
 ) {
   // console.log(method);
   const API_BASE = import.meta.env.VITE_API_URL || "";
-  console.log(API_BASE);
   const url = `${API_BASE}/transactions${params ? `/${params}` : ""}${
     query ? `?${query}` : ""
   }`;
