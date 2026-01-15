@@ -9,7 +9,7 @@ const router = express.Router();
 // ➤ REGISTER USER
 router.post("/authRegister", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
 
     if (!username || !password) {
       return res
@@ -33,7 +33,7 @@ router.post("/authRegister", async (req, res) => {
 // ➤ LOGIN USER
 router.post("/authLogin", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
 
     if (!username || !password) {
       return res
