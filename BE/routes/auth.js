@@ -40,6 +40,8 @@ router.post("/authLogin", async (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
     }
+    username = username.trim();
+    password = password.trim();
     const query = "SELECT * FROM users WHERE username = $1";
 
     const result = await pool.query(query, [username]);
