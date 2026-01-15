@@ -71,7 +71,7 @@ const BarChartWithMultiXAxis = () => {
   }, []);
   return (
     <>
-      {data > 0 ? (
+      {data.length > 0 ? (
         <BarChart
           style={{
             width: "100%",
