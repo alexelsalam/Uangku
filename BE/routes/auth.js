@@ -16,6 +16,9 @@ router.post("/authRegister", async (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
     }
+    username = username.trim();
+    password = password.trim();
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
