@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div
       id="home"
-      className="relative flex flex-col w-full text-white bg-black min-h-screen md:w-sm md:mx-auto md:rounded-lg md:shadow-lg"
+      className="relative flex flex-col w-full text-white bg-black h-screen md:w-sm md:mx-auto md:rounded-lg md:shadow-lg"
     >
       {overlay && (
         <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm z-10" />
@@ -30,8 +30,8 @@ export default function Home() {
       {/* Header */}
       <Headers setOverlay={setOverlay} setNewData={setNewData} data={items} />
       {/* Transactions */}
-      <div className="flex-1 px-4">
-        <h2 className="mb-2 text-lg">Transaksi</h2>
+      <h2 className="mb-2 text-lg">Transaksi</h2>
+      <div className="px-4 overflow-auto hide-scrollbar">
         {items.length > 0 ? (
           <TransactionsList
             data={items}
