@@ -1,31 +1,25 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Pie, PieChart } from "recharts";
-import apiData from "../api/apiData";
+import { useAppStore } from "../store/store";
 
 export default function PieChartWithPaddingAngle({
   isAnimationActive = true,
   borderColor = null,
 }) {
-  // console.log(data);
-  const [data, setData] = useState([]);
+  const { dataPieTransactions, getDataPieTransactions } = useAppStore();
   useEffect(() => {
+    getDataPieTransactions();
+  }, [getDataPieTransactions]);
+
+  const data = useMemo(() => {
     const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28DFF"];
 
-    (async () => {
-      try {
-        const result = await apiData("data/pie");
-        const mapped = (result || []).map((item, index) => ({
-          name: item.kategori,
-          value: item.jumlah,
-          fill: colors[index % colors.length],
-        }));
-        setData(mapped);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
-  }, []);
+    return (dataPieTransactions || []).map((item, index) => ({
+      name: item.kategori,
+      value: item.jumlah,
+      fill: colors[index % colors.length],
+    }));
+  }, [dataPieTransactions]);
 
   return (
     <>

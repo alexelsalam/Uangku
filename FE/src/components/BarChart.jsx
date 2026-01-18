@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useState } from "react";
+// import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -9,7 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import apiData from "../api/apiData";
+import { useAppStore } from "../store/store";
+// import apiData from "../api/apiData";
 
 const monthTickFormatter = (tick) => {
   const date = new Date(tick);
@@ -61,17 +62,18 @@ const formatNumberShort = (num) => {
 };
 
 const BarChartWithMultiXAxis = () => {
-  const [data, setData] = useState([]);
-  console.log(data);
+  // const [data, setData] = useState([]);
+  const { dataBarTransactions, getDataBarTransactions } = useAppStore();
   useEffect(() => {
-    (async () => {
-      const result = await apiData("data/bar");
-      setData(result);
-    })();
-  }, []);
+    // (async () => {
+    //   const result = await apiData("data/bar");
+    //   setData(result);
+    // })();
+    getDataBarTransactions();
+  }, [getDataBarTransactions]);
   return (
     <>
-      {data.length > 0 ? (
+      {dataBarTransactions.length > 0 ? (
         <BarChart
           style={{
             width: "100%",
@@ -80,7 +82,7 @@ const BarChartWithMultiXAxis = () => {
             aspectRatio: 1.618,
           }}
           responsive
-          data={data} // gunakan data dari API atau dummyData jika tidak ada
+          data={dataBarTransactions} // gunakan data dari API atau dummyData jika tidak ada
           margin={{
             top: 25,
             right: 0,

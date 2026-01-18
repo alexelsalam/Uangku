@@ -1,34 +1,42 @@
-import apiData from "../api/apiData.js";
+// import apiData from "../api/apiData.js";
 import Alarm from "../icons/Alarm.jsx";
 import { useEffect, useState } from "react";
+import { useAppStore } from "../store/store.js";
 
 export default function WarningSpend() {
   const [isOpen, setIsOpen] = useState(false);
-  const [totalPemasukan, setTotalPemasukan] = useState(0);
-  const [totalPengeluaran, setTotalPengeluaran] = useState(0);
-  const [date, setDate] = useState("");
-
+  // const [totalPemasukan, setTotalPemasukan] = useState(0);
+  // const [totalPengeluaran, setTotalPengeluaran] = useState(0);
+  // const [date, setDate] = useState("");
+  const {
+    totalPemasukan,
+    totalPengeluaran,
+    getTotalPemasukan,
+    getTotalPengeluaran,
+  } = useAppStore();
   useEffect(() => {
-    (async () => {
-      try {
-        const resPemasukan = await apiData("pemasukan/total");
-        const resPengeluaran = await apiData("pengeluaran/total");
+    getTotalPemasukan();
+    getTotalPengeluaran();
+    // (async () => {
+    //   try {
+    //     const resPemasukan = await apiData("pemasukan/total");
+    //     const resPengeluaran = await apiData("pengeluaran/total");
 
-        setTotalPemasukan(resPemasukan.total || 0);
-        setDate(resPemasukan.month || "");
-        setTotalPengeluaran(resPengeluaran.total || 0);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
-  });
+    //     setTotalPemasukan(resPemasukan.total || 0);
+    //     setDate(resPemasukan.month || "");
+    //     setTotalPengeluaran(resPengeluaran.total || 0);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // })();
+  }, [getTotalPemasukan, getTotalPengeluaran]);
 
   const alarmHandle = () => {
     setIsOpen(!isOpen);
   };
 
-  const income = totalPemasukan;
-  const expense = totalPengeluaran;
+  const income = totalPemasukan.total;
+  const expense = totalPengeluaran.total;
 
   const progress = income === 0 ? 0 : Math.min((expense / income) * 100, 100);
 
@@ -66,12 +74,12 @@ export default function WarningSpend() {
       <div className="w-64 h-20 bg-white rounded-md shadow-lg absolute  -top-4 right-3 flex items-center justify-center text-black">
         <div className="text-sm text-black absolute top-2 left-2">
           <p>Batas Pengeluaran</p>
-          <p>Bulan {date}</p>
+          <p>Bulan {totalPemasukan.month}</p>
         </div>
         <div className="flex text-xs text-black absolute bottom-5 right-2">
-          <p>Rp{totalPengeluaran.toLocaleString("id-ID")} /</p>
+          <p>Rp{totalPengeluaran.total.toLocaleString("id-ID")} /</p>
           <p className="text-[0.5rem] text-">
-            Rp{totalPemasukan.toLocaleString("id-ID")}
+            Rp{totalPemasukan.total.toLocaleString("id-ID")}
           </p>
         </div>
 

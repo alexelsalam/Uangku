@@ -16,19 +16,14 @@ export default function Headers({ setOverlay, setNewData }) {
   const [valuePayment, setValuePayment] = useState("cash");
   const [valueCategory, setValueCategory] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [total, setTotal] = useState(0);
   const { shouldRefetch } = useAppStore();
 
   const token = localStorage.getItem("token");
   const { username } = token ? jwtDecode(token) : null;
-
+  const { totalPengeluaran, getTotalPengeluaran } = useAppStore();
   useEffect(() => {
-    (async () => {
-      const { total } = await apiData("pengeluaran/total");
-
-      setTotal(total);
-    })();
-  }, [submitting, shouldRefetch]);
+    getTotalPengeluaran();
+  }, [getTotalPengeluaran, submitting, shouldRefetch]);
 
   const addBalanceHandle = (page) => {
     if (addBalance) setShowAnimOut(true);
@@ -63,7 +58,7 @@ export default function Headers({ setOverlay, setNewData }) {
         waktu: `${date.getHours()}:${date.getMinutes()}`,
         tanggal: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
           2,
-          "0"
+          "0",
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
       await apiData(null, null, "POST", payload);
@@ -105,7 +100,7 @@ export default function Headers({ setOverlay, setNewData }) {
             Pengeluaran
           </p>
           <p className="text-4xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-            Rp{total}
+            Rp{totalPengeluaran.total}
           </p>
         </div>
 

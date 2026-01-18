@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import Headers from "../components/Headers";
 import TransactionsList from "../components/TransactionsList";
-import apiData from "../api/apiData.js";
+// import apiData from "../api/apiData.js";
 import groupByDate from "../utils/GrupByDate.js";
+import { useAppStore } from "../store/store.js";
 
 export default function Home() {
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   const [newData, setNewData] = useState(false);
   const [overlay, setOverlay] = useState(false);
+  const { allTransactions, getAllTransactions } = useAppStore();
 
   useEffect(() => {
-    (async () => {
-      const result = await apiData();
-      setData(result);
-    })();
-  }, [newData]);
+    getAllTransactions();
+  }, [newData, getAllTransactions]);
 
-  const tx = groupByDate(data || []); // Gunakan data dari API atau dummyData jika tidak ada
+  const tx = groupByDate(allTransactions || []); // Gunakan data dari API atau dummyData jika tidak ada
   const items = Object.values(tx)[0] || []; // Ambil nilai dari object yang sudah dikelompokkan
 
   return (
