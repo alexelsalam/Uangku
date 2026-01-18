@@ -5,9 +5,7 @@ import { useAppStore } from "../store/store.js";
 
 export default function WarningSpend() {
   const [isOpen, setIsOpen] = useState(false);
-  // const [totalPemasukan, setTotalPemasukan] = useState(0);
-  // const [totalPengeluaran, setTotalPengeluaran] = useState(0);
-  // const [date, setDate] = useState("");
+
   const {
     totalPemasukan,
     totalPengeluaran,
@@ -17,18 +15,6 @@ export default function WarningSpend() {
   useEffect(() => {
     getTotalPemasukan();
     getTotalPengeluaran();
-    // (async () => {
-    //   try {
-    //     const resPemasukan = await apiData("pemasukan/total");
-    //     const resPengeluaran = await apiData("pengeluaran/total");
-
-    //     setTotalPemasukan(resPemasukan.total || 0);
-    //     setDate(resPemasukan.month || "");
-    //     setTotalPengeluaran(resPengeluaran.total || 0);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // })();
   }, [getTotalPemasukan, getTotalPengeluaran]);
 
   const alarmHandle = () => {

@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import TransactionsList from "../components/TransactionsList";
 import groupByDate from "../utils/GrupByDate";
 import Filter from "../components/Filter.jsx";
-// import apiData from "../api/apiData.js";
 import { useLocation } from "react-router-dom";
 import { useAppStore } from "../store/store.js";
 
 export function Transaksi() {
-  // const [data, setData] = useState(null);
   const [newData, setNewData] = useState(false);
   const [query, setQuery] = useState("");
   const [overlay, setOverlay] = useState(null);
@@ -24,10 +22,6 @@ export function Transaksi() {
 
   useEffect(() => {
     getAllTransactions(null, query);
-    // (async () => {
-    //   const result = await apiData(null, query);
-    //   setData(result);
-    // })();
   }, [newData, query, getAllTransactions]);
 
   const tx = groupByDate(allTransactions || []);
