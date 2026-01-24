@@ -19,7 +19,7 @@ export function Data() {
           className="relative  bg-black
          rounded-3xl h-auto w-[97%] mx-auto mt-4 px-2"
         >
-          <p className="p-2">pendapatan</p>
+          <p className="p-2">Pengeluaran</p>
           <PieChartWithPaddingAngle />
         </div>
       </div>
