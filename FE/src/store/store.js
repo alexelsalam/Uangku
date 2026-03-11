@@ -7,6 +7,7 @@ export const useAppStore = create((set) => ({
   allTransactions: [],
   dataBarTransactions: [],
   dataPieTransactions: [],
+  loading: false,
   shouldRefetch: false,
   error: null,
   triggerRefetch: () =>

@@ -8,8 +8,9 @@ import WarningSpend from "./WarningSpend.jsx";
 import apiData from "../api/apiData.js";
 import FormPemasukan from "./FormPemasukan.jsx";
 import FormPengeluaran from "./FormPengeluaran.jsx";
+import Skeleton from "./Skeleton.jsx";
 
-export default function Headers({ setOverlay, setNewData }) {
+export default function Headers({ setOverlay, setNewData, loading }) {
   const [addBalance, setAddBalance] = useState(false);
   const [showAnimOut, setShowAnimOut] = useState(false);
   const [formPage, setFormPage] = useState(true);
@@ -99,9 +100,13 @@ export default function Headers({ setOverlay, setNewData }) {
           <p className="text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
             Pengeluaran
           </p>
-          <p className="text-4xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-            Rp{totalPengeluaran.total}
-          </p>
+          {loading ? (
+            <Skeleton className="w-32 h-8 mx-auto mt-2 rounded" />
+          ) : (
+            <p className="text-4xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+              Rp{Number(totalPengeluaran?.total ?? 0).toLocaleString("id-ID")}
+            </p>
+          )}
         </div>
 
         {/* Action buttons */}

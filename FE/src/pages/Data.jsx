@@ -9,19 +9,9 @@ export function Data() {
     >
       <div className="absolute inset-0 bg-black/80 overflow-auto backdrop-blur-sm">
         <h2 className="pt-2 pl-5 text-2xl font-normal">Data</h2>
-        <div
-          className="bg-black
-         rounded-3xl h-auto w-[97%] mx-auto mt-4 px-2"
-        >
-          <BarChartWithMultiXAxis />
-        </div>
-        <div
-          className="relative  bg-black
-         rounded-3xl h-auto w-[97%] mx-auto mt-4 px-2"
-        >
-          <p className="p-2">Pengeluaran</p>
-          <PieChartWithPaddingAngle />
-        </div>
+        <BarChartWithMultiXAxis />
+
+        <PieChartWithPaddingAngle />
       </div>
       {/* bg */}
       <div className="bg-primary p-4 h-2/3 "></div>

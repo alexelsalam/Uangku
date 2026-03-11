@@ -4,12 +4,14 @@ import groupByDate from "../utils/GrupByDate";
 import Filter from "../components/Filter.jsx";
 import { useLocation } from "react-router-dom";
 import { useAppStore } from "../store/store.js";
+import Skeleton from "../components/Skeleton.jsx";
 
 export function Transaksi() {
   const [newData, setNewData] = useState(false);
   const [query, setQuery] = useState("");
   const [overlay, setOverlay] = useState(null);
   const { allTransactions, getAllTransactions } = useAppStore();
+  const loading = useAppStore((state) => state.loading);
 
   const location = useLocation();
 
@@ -60,7 +62,11 @@ export function Transaksi() {
       <div className="absolute inset-0 bg-black/80 overflow-auto hide-scrollbar backdrop-blur-sm">
         <div className="px-4 pt-15 space-y-1 ">
           {/* fallback ketika kosong */}
-          {Object.keys(tx).length === 0 ? (
+          {loading ? (
+            Array.from({ length: 7 }).map((_, index) => (
+              <Skeleton key={index} className="w-full h-16 mb-2 rounded-xl" />
+            ))
+          ) : Object.keys(tx).length === 0 ? (
             <div className="py-8 text-center text-gray-400">
               Belum ada transaksi
             </div>
