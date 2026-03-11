@@ -62,21 +62,21 @@ export default function Headers({ setOverlay, setNewData, loading }) {
           "0",
         )}-${String(date.getDate()).padStart(2, "0")}`,
       };
-      await apiData(null, null, "POST", payload);
 
       // close form and optionally reset values
       setAddBalance(false);
+      setOverlay(false); // close overlay after submission
+
       setShowAnimOut(false);
       setValueCategory("");
       setValuePayment("cash");
+      await apiData(null, null, "POST", payload);
     } catch (err) {
       console.error("Submit error:", err);
       alert("Gagal menyimpan transaksi");
     } finally {
       setSubmitting(false);
       setNewData((prev) => !prev); // trigger re-fetch or update state
-      setAddBalance(false); // close form after submission
-      setOverlay(false); // close overlay after submission
     }
   };
 
