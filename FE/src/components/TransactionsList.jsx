@@ -105,12 +105,12 @@ export default function TransactionsList({
                 )}
               </div>
               <div className="flex-1 ml-3">
-                <p className="text-sm font-medium">{item.kategori}</p>
+                <p className="text-sm">{item.kategori}</p>
                 <p className="text-xs ">{item.catatan}</p>
               </div>
               <div className="text-right">
                 <p
-                  className={`text-sm font-medium ${
+                  className={`text-sm font-[400] ${
                     item.tipe === "Pemasukan"
                       ? "text-emerald-400"
                       : "text-rose-400"
