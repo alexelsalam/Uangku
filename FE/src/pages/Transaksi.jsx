@@ -59,7 +59,7 @@ export function Transaksi() {
         </button>
       </div>
       {/* membuat overlay bisa di scroll */}
-      <div className="absolute inset-0 bg-black/80 overflow-auto hide-scrollbar backdrop-blur-sm">
+      <div className="absolute inset-0 bg-black/80 overflow-auto hide-scrollbar backdrop-blur-sm pb-24">
         <div className="px-4 pt-15 space-y-1 ">
           {/* fallback ketika kosong */}
           {loading ? (

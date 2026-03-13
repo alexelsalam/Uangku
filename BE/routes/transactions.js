@@ -258,7 +258,7 @@ ORDER BY to_char(tanggal::date, 'YYYY-MM');
 });
 
 // Ambil data untuk grafik pie
-router.get("/data/pie", async (req, res) => {
+router.get("/data/pie/pengeluaran", async (req, res) => {
   try {
     if (!req.user) return res.status(401).json({ error: "Unauthorized" });
     const query = `
@@ -268,6 +268,28 @@ router.get("/data/pie", async (req, res) => {
       FROM transactions
       WHERE users_id = $1
         AND tipe = 'Pengeluaran'
+        AND to_char(tanggal::date, 'YYYY-MM') = to_char(CURRENT_DATE, 'YYYY-MM')
+      GROUP BY kategori
+      ORDER BY jumlah DESC;
+    `;
+
+    const result = await pool.query(query, [req.user]);
+
+    return res.json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+router.get("/data/pie/pemasukan", async (req, res) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    const query = `
+      SELECT
+        kategori,
+        COALESCE(SUM(jumlah), 0)::integer AS jumlah
+      FROM transactions
+      WHERE users_id = $1
+        AND tipe = 'Pemasukan'
         AND to_char(tanggal::date, 'YYYY-MM') = to_char(CURRENT_DATE, 'YYYY-MM')
       GROUP BY kategori
       ORDER BY jumlah DESC;

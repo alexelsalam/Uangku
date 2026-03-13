@@ -6,7 +6,8 @@ export const useAppStore = create((set) => ({
   totalPemasukan: [],
   allTransactions: [],
   dataBarTransactions: [],
-  dataPieTransactions: [],
+  dataPieTransactionsIN: [],
+  dataPieTransactionsOUT: [],
   loading: false,
   shouldRefetch: false,
   error: null,
@@ -50,11 +51,20 @@ export const useAppStore = create((set) => ({
       set({ error: err.message, loading: false });
     }
   },
-  getDataPieTransactions: async () => {
+  getDataPieTransactionsOUT: async () => {
     set({ loading: true });
     try {
-      const data = await apiData("data/pie");
-      set({ dataPieTransactions: data, loading: false });
+      const data = await apiData("data/pie/pengeluaran");
+      set({ dataPieTransactionsOUT: data, loading: false });
+    } catch (err) {
+      set({ error: err.message, loading: false });
+    }
+  },
+  getDataPieTransactionsIN: async () => {
+    set({ loading: true });
+    try {
+      const data = await apiData("data/pie/pemasukan");
+      set({ dataPieTransactionsIN: data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
     }

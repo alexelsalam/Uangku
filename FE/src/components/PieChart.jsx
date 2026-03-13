@@ -1,7 +1,6 @@
-import { useEffect, useMemo } from "react";
 import { Pie, PieChart } from "recharts";
-import { useAppStore } from "../store/store";
 import Skeleton from "./Skeleton";
+import { useAppStore } from "../store/store";
 // pengeluaran icons
 import FnB from "../icons/icons_pengeluaran/FnB.jsx";
 import Pulsa from "../icons/icons_pengeluaran/Pulsa.jsx";
@@ -27,14 +26,15 @@ import Cash from "../icons/icons_pendapatan/Cash.jsx";
 import Freelance from "../icons/icons_pendapatan/Freelance.jsx";
 import Pasif from "../icons/icons_pendapatan/Pasif.jsx";
 import SideJob from "../icons/icons_pendapatan/SideJob.jsx";
+import { useMemo } from "react";
 
 export default function PieChartWithPaddingAngle({
   isAnimationActive = true,
   borderColor = null,
+  text,
+  dataPie = [],
 }) {
-  const { dataPieTransactions, getDataPieTransactions } = useAppStore();
   const loading = useAppStore((state) => state.loading);
-
   const categoryColor = useMemo(
     () => ({
       // pengeluaran
@@ -67,11 +67,6 @@ export default function PieChartWithPaddingAngle({
     }),
     [],
   );
-
-  useEffect(() => {
-    getDataPieTransactions();
-  }, [getDataPieTransactions]);
-
   const data = useMemo(() => {
     const fallbackColors = [
       "#0088FE",
@@ -81,7 +76,7 @@ export default function PieChartWithPaddingAngle({
       "#A28DFF",
     ];
 
-    return (dataPieTransactions || []).map((item, index) => {
+    return (dataPie || []).map((item, index) => {
       const key = String(item.kategori || "").toLowerCase();
       const meta = categoryColor[key];
 
@@ -93,8 +88,7 @@ export default function PieChartWithPaddingAngle({
         fill: meta?.color || fallbackColors[index % fallbackColors.length],
       };
     });
-  }, [dataPieTransactions, categoryColor]);
-
+  }, [dataPie, categoryColor]);
   return (
     <>
       {loading ? (
@@ -104,7 +98,7 @@ export default function PieChartWithPaddingAngle({
           className="
          rounded-3xl h-auto w-[97%] mx-auto mt-4 px-2"
         >
-          <p className="p-2">Pengeluaran</p>
+          <p className="p-2">{text}</p>
           {data.length === 0 ? (
             <div className="text-center text-gray-400 py-8">
               Belum ada data transaksi
