@@ -1,13 +1,30 @@
 // routes/transactions.js
-import express from "express";
-import pool from "../lib/db.js";
+import express, { Request, Response } from "express";
+import pool from "../lib/db";
 const router = express.Router();
 // Ambil transaksi berdasarkan kategori
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const userId = req.user; // dari middleware auth
-    const { id, tipe, kategori, min, max, pembayaran, dari, sampai } =
-      req.query;
+    const {
+      id,
+      tipe,
+      kategori,
+      min,
+      max,
+      pembayaran,
+      dari,
+      sampai,
+    }: {
+      id?: string;
+      tipe?: string;
+      kategori?: string;
+      min?: string;
+      max?: string;
+      pembayaran?: string;
+      dari?: string;
+      sampai?: string;
+    } = req.query;
 
     let query = `
       SELECT *
@@ -56,8 +73,8 @@ router.get("/", async (req, res) => {
 
     return res.json(result.rows);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -86,7 +103,9 @@ router.get("/pengeluaran/total", async (req, res) => {
 
     res.json({ month: `${month}-${year}`, total });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching pengeluaran total:", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -115,7 +134,8 @@ router.get("/pemasukan/total", async (req, res) => {
 
     res.json({ month: `${month}-${year}`, total });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 // Tambah transaksi
@@ -150,7 +170,8 @@ router.post("/", async (req, res) => {
       message: "Transaksi berhasil ditambahkan",
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -170,7 +191,9 @@ router.delete("/:id", async (req, res) => {
     }
     res.status(200).json({ message: "Transaksi berhasil dihapus" });
   } catch (error) {
-    return res.status(500).json({ error: err.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error deleting transaction:", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -219,7 +242,9 @@ router.put("/:id", async (req, res) => {
     // Jika berhasil, kirim respons sukses
     res.status(200).json({ message: "Transaksi berhasil diperbarui" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error updating transaction:", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -253,7 +278,9 @@ ORDER BY to_char(tanggal::date, 'YYYY-MM');
 
     return res.json(result.rows);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching bar chart data:", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -277,7 +304,9 @@ router.get("/data/pie/pengeluaran", async (req, res) => {
 
     return res.json(result.rows);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching pie chart data (pengeluaran):", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 router.get("/data/pie/pemasukan", async (req, res) => {
@@ -299,7 +328,9 @@ router.get("/data/pie/pemasukan", async (req, res) => {
 
     return res.json(result.rows);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching pie chart data (pemasukan):", errorMessage);
+    return res.status(500).json({ error: errorMessage });
   }
 });
 export default router;

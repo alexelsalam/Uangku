@@ -1,18 +1,35 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
+import { NextFunction, Request, Response } from "express";
 dotenv.config();
-function middleware(req, res, next) {
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: string;
+    }
+  }
+}
+function middleware(req: Request, res: Response, next: NextFunction) {
   // Cek apakah ada header Authorization
   const authHeader = req.headers.authorization;
+
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Token tidak ditemukan" });
   }
 
   // Cek apakah token valid (misalnya, token harus berupa "Bearer <token>")
   const token = authHeader.split(" ")[1];
+  const secret = process.env.JWT_SECRET;
 
+  // Check that JWT_SECRET exists
+  if (!secret) {
+    console.error("JWT_SECRET is not defined");
+    res.status(500).json({ message: "Server configuration error" });
+    return;
+  }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, secret) as JwtPayload;
     req.user = decoded.username;
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });

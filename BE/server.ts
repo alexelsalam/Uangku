@@ -1,7 +1,7 @@
-import express from "express";
-import transactionsRouter from "./routes/transactions.js";
-import authRouter from "./routes/auth.js";
-import middleware from "./middleware/middleware.js";
+import express, { Request, Response } from "express";
+import transactionsRouter from "./routes/transactions";
+import authRouter from "./routes/auth";
+import middleware from "./middleware/middleware";
 import cors from "cors";
 
 // Create an Express application
@@ -19,11 +19,10 @@ app.use(
   }),
 );
 
-app.use(express.json());
 app.use("/", authRouter);
 app.use("/transactions", middleware, transactionsRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("API Catatan Uang berjalan");
 });
 

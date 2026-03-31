@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import pool from "../lib/db.js";
+import pool from "../lib/db";
 import bcrypt from "bcryptjs";
 dotenv.config();
 const router = express.Router();
@@ -26,7 +26,9 @@ router.post("/authRegister", async (req, res) => {
     await pool.query(query, [username, hashedPassword]);
     res.status(201).json({ message: "User created" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error("Error creating user:", errorMessage);
+    res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -56,14 +58,17 @@ router.post("/authLogin", async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: "Username atau password salah" });
     }
+    const secret = process.env.JWT_SECRET;
 
-    const token = jwt.sign(
-      { username: user.username },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    // Check that JWT_SECRET exists
+    if (!secret) {
+      console.error("JWT_SECRET is not defined");
+      res.status(500).json({ message: "Server configuration error" });
+      return;
+    }
+    const token = jwt.sign({ username: user.username }, secret, {
+      expiresIn: "7d",
+    });
 
     res.json({ token });
   } catch (error) {
