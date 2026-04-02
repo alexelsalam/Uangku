@@ -1,6 +1,6 @@
 // routes/transactions.js
 import express, { Request, Response } from "express";
-import pool from "../lib/db";
+import pool from "../lib/db.js";
 const router = express.Router();
 // Ambil transaksi berdasarkan kategori
 router.get("/", async (req: Request, res: Response) => {
