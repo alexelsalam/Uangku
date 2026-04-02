@@ -18,7 +18,7 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use(express.json()); // Middleware untuk parsing JSON
 app.use("/", authRouter);
 app.use("/transactions", middleware, transactionsRouter);
 

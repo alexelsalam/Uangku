@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
 import Home from "./pages/Home.js";
 import { Transaksi } from "./pages/Transaksi.js";
 import { Data } from "./pages/Data.js";
@@ -31,7 +31,7 @@ function App() {
 
         {/* <Nav /> */}
       </Router>
-      <Analytics />
+      {/* <Analytics /> */}
     </>
   );
 }
