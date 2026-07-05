@@ -63,7 +63,7 @@ const formatNumberShort = (num: any) => {
 const BarChartWithMultiXAxis = () => {
   const { dataBarTransactions, getDataBarTransactions } = useAppStore();
   const loading = useAppStore((state) => state.loading);
-
+  console.log("dataBarTransactions", dataBarTransactions);
   useEffect(() => {
     getDataBarTransactions();
   }, [getDataBarTransactions]);

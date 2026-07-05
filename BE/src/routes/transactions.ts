@@ -3,6 +3,18 @@ import express, { Request, Response } from "express";
 import pool from "../lib/db.js";
 const router = express.Router();
 // Ambil transaksi berdasarkan kategori
+export interface Payload {
+  id: number;
+  users_id: string;
+  tipe: "Pemasukan" | "Pengeluaran";
+  kategori: string;
+  jumlah: number;
+  admin: string;
+  pembayaran: string;
+  waktu: string;
+  tanggal: string;
+  catatan?: string;
+}
 router.get("/", async (req: Request, res: Response) => {
   try {
     const userId = req.user; // dari middleware auth
@@ -151,7 +163,7 @@ router.post("/", async (req, res) => {
       waktu,
       tanggal,
       catatan,
-    } = req.body;
+    }: Payload = req.body;
     const query = `INSERT INTO transactions (users_id,tipe, kategori, jumlah, admin, pembayaran, waktu, tanggal, catatan) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)`;
     const values = [
       users_id,

@@ -1,11 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
+  /* Warm Paper color tokens */
+  --color-bg: #f7f2ea;
+  --color-surface: #ffffff;
+  --color-ink: #1a1612;
+  --color-ink-2: #6b5e52;
+  --color-ink-3: #a89888;
+  --color-border: #e8ddd0;
+  --color-amber: #c9832a;
+  --color-amber-light: #fdf3e3;
+  --color-amber-mid: #f0c88a;
+  --color-red: #c0392b;
+  --color-red-light: #fdecea;
+  --color-green: #27784a;
+  --color-green-light: #e8f5ee;
   --color-primary: #00cba9;
   --font-display: "Roboto", "sans-serif";
   --animate-fadeInUp: fadeInUp 0.2s forwards;
   --animate-fadeInDown: fadeInDown 0.2s forwards;
+
+  /* Typography */
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-mono: "DM Mono", monospace;
 
   @keyframes fadeInUp {
     from {
@@ -57,12 +74,12 @@ html {
 }
 html,
 body {
-  font-family: var(--font-display);
+  /* font-family: var(--font-display); */
+  font-family: var(--font-sans);
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
-  background-color: #000;
-  color: #fff;
+
   margin: 0;
   padding: 0;
   height: 100%;

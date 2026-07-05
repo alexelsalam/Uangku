@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Nav } from "../components/Nav";
+import { BottomNav } from "../components/layout/BottomNav";
 
 export default function Middleware() {
   const isAuthenticated = localStorage.getItem("token");
@@ -8,9 +8,10 @@ export default function Middleware() {
     return null;
   }
   return (
-    <>
-      <Nav />
-      <Outlet />;
-    </>
+    <div className="relative ">
+      {/* <Nav /> */}
+      <Outlet />
+      <BottomNav />
+    </div>
   );
 }

@@ -9,12 +9,14 @@ import apiData from "../api/apiData";
 import FormPemasukan from "./FormPemasukan";
 import FormPengeluaran from "./FormPengeluaran";
 import Skeleton from "./Skeleton";
+import { Payload, Transactions } from "../utils/interfaces";
 
 interface CustomJwtPayload {
   username: string;
   exp: number;
   // Add other fields your token contains
 }
+
 export default function Headers({
   setOverlay,
   setNewData,
