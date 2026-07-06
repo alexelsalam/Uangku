@@ -4,12 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-// import { Analytics } from "@vercel/analytics/react";
-import Home from "./pages/Home.js";
-import { Transaksi } from "./pages/Transaksi.js";
-import { Data } from "./pages/Data.js";
-import Login from "./pages/Login.js";
-import Register from "./pages/Register.js";
+
 import Middleware from "./utils/Middleware.js";
 import AuthMiddleware from "./utils/AuthMiddleware.js";
 import { HomePage } from "./pages/HomePage.js";
@@ -19,6 +14,8 @@ import { CategoriesPage } from "./pages/CategoriesPage.js";
 import { AddPage } from "./pages/AddPage.js";
 import { ReportPage } from "./pages/RaportPage.js";
 import { AppProvider } from "./hooks/useAppContext.js";
+import { LoginPage } from "./pages/LoginPage.js";
+import { RegisterPage } from "./pages/RegisterPage.js";
 function App() {
   return (
     <AppProvider>
@@ -27,9 +24,6 @@ function App() {
           <Routes>
             <Route element={<Middleware />}>
               <Route path="/" element={<Navigate to="/home" replace />} />
-              {/* <Route path="/home" element={<Home />} /> */}
-              {/* <Route path="/transaksi" element={<Transaksi />} /> */}
-              <Route path="/data" element={<Data />} />
               <Route path="/Home" element={<HomePage />} />
               <Route path="/transaksi/:id" element={<DetailPage />} />
               <Route path="/report" element={<ReportPage />} />
@@ -38,8 +32,8 @@ function App() {
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
             <Route element={<AuthMiddleware />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
             </Route>
           </Routes>
 

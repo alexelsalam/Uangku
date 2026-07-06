@@ -12,7 +12,6 @@ export interface Transactions {
   tanggal: string;
 }
 export interface Payload {
-  id: number;
   users_id: string;
   tipe: Tipe;
   kategori: string;

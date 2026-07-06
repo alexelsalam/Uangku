@@ -238,7 +238,8 @@ export function HomePage() {
           />
         </div>
         <p className="text-sm text-[#7a6a5a]">
-          <b className="text-amber">{budgetPct}%</b> anggaran bulanan terpakai
+          <b className="text-amber">{budgetPct || 0}%</b> anggaran bulanan
+          terpakai
         </p>
         {/* Income / Expense row */}
         <div className="flex gap-2.5 mt-4">

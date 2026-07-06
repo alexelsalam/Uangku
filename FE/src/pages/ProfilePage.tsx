@@ -1,3 +1,5 @@
+import Logout from "../components/Logout";
+
 export function ProfilePage() {
   interface MenuItem {
     emoji: string;
@@ -86,9 +88,7 @@ export function ProfilePage() {
           </div>
         ))}
       </div>
-      <button className="mx-5 mt-5 mb-25 w-[calc(100%-40px)] bg-[var(--color-red-light)] border-[1.5px] border-[#f5c6c2] text-[var(--color-red)] rounded-[14px] py-3.5 text-sm font-bold">
-        Keluar
-      </button>
+      <Logout />
     </div>
   );
 }

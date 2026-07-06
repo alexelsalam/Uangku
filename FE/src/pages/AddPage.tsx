@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { Payload } from "../utils/interfaces";
 import apiData from "../api/apiData";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload, TransactionType } from "../types";
 
 const EXPENSE_CATS = CATEGORIES.filter((c) => c.type === "Pengeluaran");
 const INCOME_CATS = CATEGORIES.filter((c) => c.type === "Pemasukan");
-type TransactionType = "Pemasukan" | "Pengeluaran";
-export function AddPage() {
-  // const { navigate, addTransaction, showToast } = useApp()
-  const navigate = useNavigate();
 
+export function AddPage() {
+  const navigate = useNavigate();
   const [txType, setTxType] = useState<TransactionType>("Pengeluaran");
   const [numRaw, setNumRaw] = useState("");
   const [note, setNote] = useState("");
@@ -21,7 +21,17 @@ export function AddPage() {
   const [showNumpad, setShowNumpad] = useState(false);
   const displayAmount = numRaw ? formatIDR(parseInt(numRaw)) : "0";
   const cats = txType === "Pengeluaran" ? EXPENSE_CATS : INCOME_CATS;
+  const token = localStorage.getItem("token");
+  let username = "";
 
+  if (token) {
+    try {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      username = decoded.username || "";
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }
   function handleNum(key: string) {
     if (key === "del") {
       setNumRaw((p) => p.slice(0, -1));
@@ -60,8 +70,7 @@ export function AddPage() {
           minute: "2-digit",
         }),
         tanggal: date,
-        users_id: localStorage.getItem("username") || "",
-        id: 0, // This will be set by the backend
+        users_id: username,
       };
       console.log("Payload to be sent:", payload);
       await apiData(null, null, "POST", payload);

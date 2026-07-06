@@ -34,7 +34,7 @@ export function DetailPage() {
   }
   const Icon = cat?.icon;
   return (
-    <div className="flex-1 overflow-y-auto hide-scrollbar">
+    <div className="flex-1 overflow-y-auto hide-scrollbar h-screen">
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-3">
         <button
@@ -123,7 +123,7 @@ export function DetailPage() {
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2.5 mx-5 mt-5">
+      <div className="flex gap-2.5 mx-5 mt-5 mb-20">
         <button
           // onClick={() => showToast("✏ Edit transaksi")}
           className="flex-1 py-3.5 text-sm font-bold rounded-xl bg-amber-light text-amber border-[1.5px] border-amber-mind"
@@ -137,8 +137,6 @@ export function DetailPage() {
           🗑 Hapus
         </button>
       </div>
-
-      <div className="h-8" />
     </div>
   );
 }
