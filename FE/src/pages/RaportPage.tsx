@@ -23,7 +23,7 @@ export function ReportPage() {
 
   // const { transactions, showToast } = useApp();
   const [period, setPeriod] = useState<Period>("Bulanan");
-
+  //membuat tanggal awal dan akhir bulan ini untuk query ke backend
   const now = new Date();
   const pad = (n: any) => String(n).padStart(2, "0");
   const y = now.getFullYear();

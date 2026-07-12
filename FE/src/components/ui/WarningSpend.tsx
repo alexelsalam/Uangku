@@ -1,6 +1,6 @@
-import Alarm from "../icons/Alarm.js";
+import Alarm from "../../icons/Alarm.js";
 import { useEffect, useState } from "react";
-import { useAppStore } from "../store/store.js";
+import { useAppStore } from "../../store/store.js";
 
 export default function WarningSpend() {
   const [isOpen, setIsOpen] = useState(false);

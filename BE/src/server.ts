@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import transactionsRouter from "./routes/transactions.js";
+import transactionsRouter from "./routes/transactions";
 import authRouter from "./routes/auth.js";
 import middleware from "./middleware/middleware.js";
 import cors from "cors";
@@ -26,4 +26,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("API Catatan Uang berjalan");
 });
 
+app.listen(3000, () => {
+  console.log("Server berjalan di http://localhost:3000");
+});
 export default app;

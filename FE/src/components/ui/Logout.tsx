@@ -1,4 +1,4 @@
-import IconLogOut from "../icons/IconLogout.js";
+import IconLogOut from "../../icons/IconLogout.js";
 
 export default function Logout() {
   const handleLogout = () => {

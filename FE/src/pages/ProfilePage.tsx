@@ -1,4 +1,4 @@
-import Logout from "../components/Logout";
+import Logout from "../components/ui/Logout";
 
 export function ProfilePage() {
   interface MenuItem {

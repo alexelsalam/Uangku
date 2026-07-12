@@ -30,35 +30,72 @@ import Cash from "../icons/icons_pendapatan/Cash";
 import Freelance from "../icons/icons_pendapatan/Freelance";
 import Pasif from "../icons/icons_pendapatan/Pasif";
 import SideJob from "../icons/icons_pendapatan/SideJob";
-import TransactionsList from "../components/TransactionsList";
 // import groupByDate from "../utils/GrupByDate";
 import { formatIDR } from "../utils/index";
 import { TransactionItem } from "../components/ui/TransactionItems";
 import { CATEGORIES, CATEGORY_META } from "../data/catergoryMeta";
 import { groupByDate } from "../utils";
-import Skeleton from "../components/Skeleton";
+import Skeleton from "../components/ui/Skeleton";
+import { useNavigate } from "react-router-dom";
+import { MonthlySetting } from "../components/ui/MonthlySetting";
+import { useShallow } from "zustand/shallow";
 
 export function HomePage() {
+  const navigate = useNavigate();
   const [newData, setNewData] = useState(false);
-  const [query, setQuery] = useState("");
   const [overlay, setOverlay] = useState(false);
-  const loading = useAppStore((state) => state.loading);
+  console.log(newData);
   const {
+    loading,
     totalPemasukan,
     totalPengeluaran,
+    dataPieTransactionsOUT,
+    getDataPieTransactionsOUT,
+    allTransactions,
+    getAllTransactions,
     getTotalPemasukan,
     getTotalPengeluaran,
-  } = useAppStore();
-  const { dataPieTransactionsOUT, getDataPieTransactionsOUT } = useAppStore();
-  const { allTransactions, getAllTransactions } = useAppStore();
+    month,
+    year,
+  } = useAppStore(
+    useShallow((state) => ({
+      loading: state.loading,
+      totalPemasukan: state.totalPemasukan,
+      totalPengeluaran: state.totalPengeluaran,
+      dataPieTransactionsOUT: state.dataPieTransactionsOUT,
+      allTransactions: state.allTransactions,
+      getAllTransactions: state.getAllTransactions,
+      getDataPieTransactionsOUT: state.getDataPieTransactionsOUT,
+      getTotalPemasukan: state.getTotalPemasukan,
+      getTotalPengeluaran: state.getTotalPengeluaran,
+      month: state.month,
+      year: state.year,
+    })),
+  );
+  //ambil tanggal sekarang buat kirim ke backend, biar bisa query data bulan ini
+  const now = new Date();
+  const pad = (n: any) => String(n).padStart(2, "0");
+  const m = pad(now.getMonth() + 1);
+  const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+
+  const startStr = `${year}-${m}-01`;
+  const endStr = `${year}-${m}-${lastDay}`;
+  const query = `dari=${startStr}&sampai=${endStr}`;
   useEffect(() => {
     getTotalPemasukan();
     getTotalPengeluaran();
-  }, [getTotalPemasukan, getTotalPengeluaran]);
-
-  useEffect(() => {
     getDataPieTransactionsOUT();
-  }, [getDataPieTransactionsOUT]);
+    getAllTransactions(null, query);
+    console.log("render useEffect");
+  }, [
+    getTotalPemasukan,
+    getTotalPengeluaran,
+    getDataPieTransactionsOUT,
+    getAllTransactions,
+    query,
+    newData,
+  ]);
+
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
   const totalIncome = totalPemasukan.total;
@@ -129,13 +166,6 @@ export function HomePage() {
   }, [dataPieTransactionsOUT, categoryColor]);
 
   // Filtered & grouped transactions
-  useEffect(() => {
-    getAllTransactions(null, query);
-  }, [newData, query, getAllTransactions]);
-
-  // Gunakan data dari API atau dummyData jika tidak ada
-  const [filter, setFilter] = useState(false);
-  const [showAnimOut, setShowAnimOut] = useState(false);
 
   const filteredTxs = useMemo(() => {
     if (activeFilter === "all") return allTransactions;
@@ -155,22 +185,22 @@ export function HomePage() {
     {
       emoji: "➕",
       label: "Tambah",
-      onClick: () => console.log("navigate('add')"),
+      onClick: () => navigate("/add"),
     },
     {
       emoji: "📊",
       label: "Laporan",
-      onClick: () => console.log("navigate('report')"),
+      onClick: () => navigate("/report"),
     },
     {
       emoji: "🎯",
       label: "Budget",
-      onClick: () => console.log("showToast('🎯 Fitur budget segera hadir')"),
+      onClick: () => alert("🎯 Fitur budget segera hadir"),
     },
     {
       emoji: "📤",
       label: "Export",
-      onClick: () => console.log("showToast('📤 Export ke CSV / PDF')"),
+      onClick: () => alert("📤 Fitur Export ke CSV / PDF"),
     },
   ];
 
@@ -178,7 +208,7 @@ export function HomePage() {
     <div className="flex-1 overflow-y-scroll h-screen  hide-scrollbar">
       {/* Header */}
       <div className="  flex justify-between items-center px-5 py-3">
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button
             className="w-8 h-8 bg-surface border border-border rounded-[9px] flex items-center justify-center text-sm text-ink-2"
             // onClick={() => showToast("◀ Bulan sebelumnya")}
@@ -192,7 +222,8 @@ export function HomePage() {
           >
             ›
           </button>
-        </div>
+        </div> */}
+        <MonthlySetting newData={newData} setNewData={setNewData} />
         <div className="flex gap-2">
           <button
             // onClick={() => showToast("🔔 Tidak ada notifikasi")}
@@ -376,7 +407,7 @@ export function HomePage() {
         </div>
       ) : (
         Object.entries(grouped).map(([date, items]) => (
-          <div key={date} className="mb-4">
+          <div key={date} className="mb-20">
             <p className="px-5 py-2 text-[11px] font-bold text-ink-3 uppercase tracking-wider bg-bg">
               {date}
             </p>
