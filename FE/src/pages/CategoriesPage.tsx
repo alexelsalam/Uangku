@@ -4,11 +4,12 @@ import { useAppStore } from "../store/store";
 import { CATEGORIES } from "../data/catergoryMeta";
 import { useApp } from "../hooks/useAppContext";
 import { KANBAN_GROUPS } from "../data/catergoryMeta";
-import { pct } from "../utils";
+import { getDateRangeParams, pct } from "../utils";
 import { GroupId } from "../types";
 import { GroupCard } from "../components/ui/GroupCard";
 import { EditSheet } from "../components/ui/EditSheet";
 import { CatRow } from "../components/ui/CatRow";
+import { useShallow } from "zustand/shallow";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export function CategoriesPage() {
@@ -20,19 +21,32 @@ export function CategoriesPage() {
     // showToast,
   } = useApp();
   const {
-    totalPemasukan,
-    dataPieTransactionsOUT,
-    getDataPieTransactionsOUT,
-    getTotalPemasukan,
-  } = useAppStore();
+    total,
+    dataPieTransactions,
+    getDataPieTransactions,
+    getTotal,
+    month,
+    year,
+  } = useAppStore(
+    useShallow((state) => ({
+      total: state.total,
+      dataPieTransactions: state.dataPieTransactions,
+      getDataPieTransactions: state.getDataPieTransactions,
+      getTotal: state.getTotal,
+      month: state.month,
+      year: state.year,
+    })),
+  );
 
+  const { query } = getDateRangeParams(year, month);
+  const pieQuery = `tipe=Pengeluaran&${query}`;
   useEffect(() => {
-    getTotalPemasukan();
-    getDataPieTransactionsOUT();
-  }, [getTotalPemasukan, getDataPieTransactionsOUT]);
+    getTotal();
+    getDataPieTransactions(pieQuery);
+  }, [getTotal, getDataPieTransactions]);
   const [editingCatId, setEditingCatId] = useState<string | null>(null);
 
-  const spendingMap = dataPieTransactionsOUT.reduce(
+  const spendingMap = dataPieTransactions.reduce(
     (acc, { kategori, jumlah }) => {
       acc[kategori] = jumlah;
       return acc;
@@ -40,7 +54,7 @@ export function CategoriesPage() {
     {},
   ); // { FnB: 20000 }
 
-  const totalIncome = totalPemasukan.total;
+  const totalIncome = total.pemasukan;
 
   // Ungrouped = no groupId in seed AND user hasn't assigned a group
   const ungrouped = CATEGORIES.filter((c) => {

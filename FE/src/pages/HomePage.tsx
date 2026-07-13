@@ -31,7 +31,7 @@ import Freelance from "../icons/icons_pendapatan/Freelance";
 import Pasif from "../icons/icons_pendapatan/Pasif";
 import SideJob from "../icons/icons_pendapatan/SideJob";
 // import groupByDate from "../utils/GrupByDate";
-import { formatIDR } from "../utils/index";
+import { formatIDR, getDateRangeParams } from "../utils/index";
 import { TransactionItem } from "../components/ui/TransactionItems";
 import { CATEGORIES, CATEGORY_META } from "../data/catergoryMeta";
 import { groupByDate } from "../utils";
@@ -43,63 +43,41 @@ import { useShallow } from "zustand/shallow";
 export function HomePage() {
   const navigate = useNavigate();
   const [newData, setNewData] = useState(false);
-  const [overlay, setOverlay] = useState(false);
-  console.log(newData);
   const {
     loading,
-    totalPemasukan,
-    totalPengeluaran,
-    dataPieTransactionsOUT,
-    getDataPieTransactionsOUT,
+    total,
+    dataPieTransactions,
+    getDataPieTransactions,
     allTransactions,
     getAllTransactions,
-    getTotalPemasukan,
-    getTotalPengeluaran,
+    getTotal,
     month,
     year,
   } = useAppStore(
     useShallow((state) => ({
       loading: state.loading,
-      totalPemasukan: state.totalPemasukan,
-      totalPengeluaran: state.totalPengeluaran,
-      dataPieTransactionsOUT: state.dataPieTransactionsOUT,
+      total: state.total,
+      dataPieTransactions: state.dataPieTransactions,
       allTransactions: state.allTransactions,
       getAllTransactions: state.getAllTransactions,
-      getDataPieTransactionsOUT: state.getDataPieTransactionsOUT,
-      getTotalPemasukan: state.getTotalPemasukan,
-      getTotalPengeluaran: state.getTotalPengeluaran,
+      getDataPieTransactions: state.getDataPieTransactions,
+      getTotal: state.getTotal,
       month: state.month,
       year: state.year,
     })),
   );
   //ambil tanggal sekarang buat kirim ke backend, biar bisa query data bulan ini
-  const now = new Date();
-  const pad = (n: any) => String(n).padStart(2, "0");
-  const m = pad(now.getMonth() + 1);
-  const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
-
-  const startStr = `${year}-${m}-01`;
-  const endStr = `${year}-${m}-${lastDay}`;
-  const query = `dari=${startStr}&sampai=${endStr}`;
+  const { query } = getDateRangeParams(year, month);
+  const pieQuery = `tipe=Pengeluaran&${query}`;
   useEffect(() => {
-    getTotalPemasukan();
-    getTotalPengeluaran();
-    getDataPieTransactionsOUT();
+    getTotal(query);
+    getDataPieTransactions(pieQuery);
     getAllTransactions(null, query);
-    console.log("render useEffect");
-  }, [
-    getTotalPemasukan,
-    getTotalPengeluaran,
-    getDataPieTransactionsOUT,
-    getAllTransactions,
-    query,
-    newData,
-  ]);
+  }, [getDataPieTransactions, getAllTransactions, query, newData]);
 
   const [activeFilter, setActiveFilter] = useState<string>("all");
-
-  const totalIncome = totalPemasukan.total;
-  const totalExpense = totalPengeluaran.total;
+  const totalIncome = total.pemasukan; // total.pemasukan;
+  const totalExpense = total.pengeluaran; // total.pengeluaran;
 
   const balance = totalIncome - totalExpense;
   const budgetPct = Math.min(
@@ -149,7 +127,7 @@ export function HomePage() {
       "#A28DFF",
     ];
 
-    return (dataPieTransactionsOUT || []).map((item, index) => {
+    return (dataPieTransactions || []).map((item, index) => {
       const key = String(
         item.kategori || "",
       ).toLowerCase() as keyof typeof categoryColor;
@@ -163,7 +141,7 @@ export function HomePage() {
         fill: meta?.color || fallbackColors[index % fallbackColors.length],
       };
     });
-  }, [dataPieTransactionsOUT, categoryColor]);
+  }, [dataPieTransactions, categoryColor]);
 
   // Filtered & grouped transactions
 
@@ -406,14 +384,16 @@ export function HomePage() {
           Belum ada transaksi
         </div>
       ) : (
-        Object.entries(grouped).map(([date, items]) => (
-          <div key={date} className="mb-20">
-            <p className="px-5 py-2 text-[11px] font-bold text-ink-3 uppercase tracking-wider bg-bg">
-              {date}
-            </p>
-            <TransactionItem data={items} />
-          </div>
-        ))
+        <div className="mb-20">
+          {Object.entries(grouped).map(([date, items]) => (
+            <div key={date} className="mb-2">
+              <p className="px-5 py-2 text-[11px] font-bold text-ink-3 uppercase tracking-wider bg-bg">
+                {date}
+              </p>
+              <TransactionItem data={items} />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

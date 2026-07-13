@@ -105,3 +105,14 @@ export function pct(value: number, total: number): number {
   if (total === 0) return 0;
   return Math.round((value / total) * 100);
 }
+// ─── Date Range Params ─────────────────────────────────────────────────────
+export function getDateRangeParams(year: number | string, month: number) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const y = Number(year);
+  const lastDay = new Date(y, month + 1, 0).getDate();
+
+  const startStr = `${y}-${pad(month + 1)}-01`;
+  const endStr = `${y}-${pad(month + 1)}-${lastDay}`;
+
+  return { startStr, endStr, query: `dari=${startStr}&sampai=${endStr}` };
+}

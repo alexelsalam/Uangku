@@ -7,7 +7,7 @@ export function MonthlySetting({
   setNewData,
 }: {
   newData: boolean;
-  setNewData: (value: boolean) => void;
+  setNewData: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   // UI — toggle antara arrow dan dropdown
   const [showDropdown, setShowDropdown] = useState(false);
@@ -62,7 +62,6 @@ export function MonthlySetting({
       setYear(year + 1);
     } else setMonth(month + 1);
   };
-
   // untuk dropdown — generate list 12 bulan tahun ini
   const monthOptions = Array.from({ length: 12 }, (_, i) => ({
     label: `${MONTH_NAMES[i]} ${now.getFullYear()}`,
@@ -76,7 +75,7 @@ export function MonthlySetting({
         className="w-8 h-8 bg-surface border border-border rounded-[9px] flex items-center justify-center text-sm text-ink-2"
         onClick={() => {
           prev();
-          setNewData(!newData);
+          setNewData((prev) => !prev);
         }}
       >
         ‹
@@ -91,7 +90,7 @@ export function MonthlySetting({
         className="w-8 h-8 bg-surface border border-border rounded-[9px] flex items-center justify-center text-sm text-ink-2"
         onClick={() => {
           next();
-          setNewData(!newData);
+          setNewData((prev) => !prev);
         }}
       >
         ›

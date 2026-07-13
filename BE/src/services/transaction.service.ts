@@ -9,46 +9,42 @@ import type {
 export async function findTransactions(
   userId: string,
   filter: TransactionFilter,
+  options?: { limit?: number; offset?: number },
 ) {
   const conditions: string[] = ["users_id = $1"];
   const params: unknown[] = [userId];
   let idx = 2;
 
+  const push = (cond: string, ...values: unknown[]) => {
+    conditions.push(cond);
+    params.push(...values);
+    idx += values.length;
+  };
+
   const { id, tipe, kategori, min, max, pembayaran, dari, sampai } = filter;
 
-  if (id) {
-    conditions.push(`id = $${idx++}`);
-    params.push(Number(id));
-  }
-  if (tipe) {
-    conditions.push(`tipe = $${idx++}`);
-    params.push(tipe);
-  }
-  if (kategori) {
-    conditions.push(`kategori = $${idx++}`);
-    params.push(kategori.trim());
-  }
-  if (pembayaran) {
-    conditions.push(`pembayaran = $${idx++}`);
-    params.push(pembayaran.trim());
-  }
+  if (id && !isNaN(Number(id))) push(`id = $${idx}`, Number(id));
+  if (tipe) push(`tipe = $${idx}`, tipe.trim());
+  if (kategori) push(`kategori = $${idx}`, kategori.trim());
+  if (pembayaran) push(`pembayaran = $${idx}`, pembayaran.trim());
 
-  if (min && max) {
-    conditions.push(`jumlah BETWEEN $${idx} AND $${idx + 1}`);
-    params.push(Number(min), Number(max));
-    idx += 2;
-  }
+  if (min != null) push(`jumlah >= $${idx}`, Number(min));
+  if (max != null) push(`jumlah <= $${idx}`, Number(max));
 
-  if (dari && sampai) {
-    conditions.push(`tanggal BETWEEN $${idx} AND $${idx + 1}`);
-    params.push(dari, sampai);
-  }
+  if (dari) push(`tanggal >= $${idx}`, dari);
+  if (sampai) push(`tanggal <= $${idx}`, sampai);
+
+  const limit = options?.limit ?? 50;
+  const offset = options?.offset ?? 0;
 
   const query = `
-    SELECT * FROM transactions
+    SELECT id, tipe, kategori, jumlah, pembayaran, tanggal, waktu
+    FROM transactions
     WHERE ${conditions.join(" AND ")}
     ORDER BY tanggal DESC, waktu DESC
+    LIMIT $${idx} OFFSET $${idx + 1}
   `;
+  params.push(limit, offset);
 
   const result = await pool.query(query, params);
   return result.rows;

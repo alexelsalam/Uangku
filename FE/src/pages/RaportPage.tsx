@@ -1,54 +1,58 @@
 import { useEffect, useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 // import { CATEGORIES, MONTHLY_DATA } from "@/data/seed";
-import { formatIDR } from "../utils/index";
+import { formatIDR, getDateRangeParams } from "../utils/index";
 import { useAppStore } from "../store/store";
 import { CATEGORIES, FALLBACK_META } from "../data/catergoryMeta";
 import { Icon } from "lucide-react";
 import { Period } from "../utils/interfaces";
+import { useShallow } from "zustand/react/shallow";
 
 export function ReportPage() {
   const {
-    totalPemasukan,
-    totalPengeluaran,
+    total,
     allTransactions,
     dataBarTransactions,
-    dataPieTransactionsOUT,
-    getDataPieTransactionsOUT,
+    dataPieTransactions,
+    getDataPieTransactions,
     getDataBarTransactions,
     getAllTransactions,
-    getTotalPemasukan,
-    getTotalPengeluaran,
-  } = useAppStore();
+    getTotal,
+    month,
+    year,
+  } = useAppStore(
+    useShallow((state) => ({
+      total: state.total,
+      allTransactions: state.allTransactions,
+      dataBarTransactions: state.dataBarTransactions,
+      dataPieTransactions: state.dataPieTransactions,
+      getDataPieTransactions: state.getDataPieTransactions,
+      getDataBarTransactions: state.getDataBarTransactions,
+      getAllTransactions: state.getAllTransactions,
+      getTotal: state.getTotal,
+      month: state.month,
+      year: state.year,
+    })),
+  );
 
   // const { transactions, showToast } = useApp();
   const [period, setPeriod] = useState<Period>("Bulanan");
   //membuat tanggal awal dan akhir bulan ini untuk query ke backend
-  const now = new Date();
-  const pad = (n: any) => String(n).padStart(2, "0");
-  const y = now.getFullYear();
-  const m = pad(now.getMonth() + 1);
-  const lastDay = new Date(y, now.getMonth() + 1, 0).getDate();
-
-  const startStr = `${y}-${m}-01`;
-  const endStr = `${y}-${m}-${lastDay}`;
-  const query = `dari=${startStr}&sampai=${endStr}`;
+  const { query } = getDateRangeParams(year, month);
+  const pieQuery = `tipe=Pengeluaran&${query}`;
   useEffect(() => {
     getAllTransactions(null, query);
-    getTotalPemasukan();
-    getTotalPengeluaran();
+    getTotal();
     getDataBarTransactions();
-    getDataPieTransactionsOUT();
+    getDataPieTransactions(pieQuery);
   }, [
     getAllTransactions,
-    getTotalPemasukan,
-    getTotalPengeluaran,
+    getTotal,
     getDataBarTransactions,
-    getDataPieTransactionsOUT,
+    getDataPieTransactions,
   ]);
-
-  const totalIncome = totalPemasukan.total;
-  const totalExpense = totalPengeluaran.total;
+  const totalIncome = total.pemasukan;
+  const totalExpense = total.pengeluaran;
   const {
     formattedTotalIncome,
     formattedTotalExpense,
@@ -64,7 +68,7 @@ export function ReportPage() {
   }, [totalIncome, totalExpense, allTransactions]);
   // Category breakdown
   const catBreakdown = useMemo(() => {
-    return dataPieTransactionsOUT
+    return dataPieTransactions
       .map(({ kategori, jumlah }) => ({
         catId: kategori,
         total: jumlah,
@@ -72,7 +76,7 @@ export function ReportPage() {
       }))
       .filter((x) => x.cat)
       .sort((a, b) => b.total - a.total);
-  }, [dataPieTransactionsOUT]);
+  }, [dataPieTransactions]);
   // Kalau data dari props/state
 
   //ubah data 2026-06-01 jadi Juni, dst
@@ -94,7 +98,7 @@ export function ReportPage() {
     () =>
       dataBarTransactions.map((item) => ({
         ...item,
-        date: monthNames[parseInt(item.date.split("-")[1], 10) - 1],
+        date: monthNames[parseInt(item.bulan.split("-")[1], 10) - 1],
       })),
     [dataBarTransactions],
   );
@@ -243,7 +247,7 @@ export function ReportPage() {
           Detail
         </button>
       </div>
-      <div className="px-5 pb-5">
+      <div className="px-5 pb-5 mb-20">
         {catBreakdown.map(({ catId, total, cat }) => {
           const pct = Math.round((total / totalExpense) * 100);
           const Icon = cat?.icon || FALLBACK_META.icon;

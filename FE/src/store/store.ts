@@ -1,13 +1,11 @@
 import { create } from "zustand";
 import apiData from "../api/apiData";
+import { TotalResult } from "../types";
 
 type StoreState = {
   month: number;
   year: number;
-  totalPemasukan: { total: number; month: string };
-  totalPengeluaran: { total: number; month: string };
-  getTotalPemasukan: () => void | Promise<void>;
-  getTotalPengeluaran: () => void | Promise<void>;
+  total: TotalResult;
   allTransactions: any[];
   getAllTransactions: (
     params?: string | null,
@@ -15,10 +13,10 @@ type StoreState = {
   ) => void | Promise<void>;
   dataBarTransactions: any[];
   getDataBarTransactions: () => void | Promise<void>;
-  dataPieTransactionsIN: any[];
-  getDataPieTransactionsIN: () => void | Promise<void>;
-  dataPieTransactionsOUT: any[];
-  getDataPieTransactionsOUT: () => void | Promise<void>;
+
+  dataPieTransactions: any[];
+  getDataPieTransactions: (query?: string) => void | Promise<void>;
+  getTotal: (query?: string) => void | Promise<void>;
   loading: boolean;
   error: string | null;
   shouldRefetch: boolean;
@@ -37,12 +35,10 @@ export const useAppStore = create<StoreState>((set) => {
   return {
     month: now.getMonth(),
     year: now.getFullYear(),
-    totalPengeluaran: { total: 0, month: "" },
-    totalPemasukan: { total: 0, month: "" },
+    total: {} as TotalResult,
     allTransactions: [],
     dataBarTransactions: [],
-    dataPieTransactionsIN: [],
-    dataPieTransactionsOUT: [],
+    dataPieTransactions: [],
     loading: false,
     shouldRefetch: false,
     error: null,
@@ -50,24 +46,7 @@ export const useAppStore = create<StoreState>((set) => {
       set((state) => ({
         shouldRefetch: !state.shouldRefetch,
       })),
-    getTotalPengeluaran: async () => {
-      set({ loading: true });
-      try {
-        const data = await apiData("pengeluaran/total");
-        set({ totalPengeluaran: data, loading: false });
-      } catch (err) {
-        set({ error: getErrorMessage(err), loading: false });
-      }
-    },
-    getTotalPemasukan: async () => {
-      set({ loading: true });
-      try {
-        const data = await apiData("pemasukan/total");
-        set({ totalPemasukan: data, loading: false });
-      } catch (err) {
-        set({ error: getErrorMessage(err), loading: false });
-      }
-    },
+
     getAllTransactions: async (params?: string | null, query?: string) => {
       set({ loading: true });
       try {
@@ -86,25 +65,26 @@ export const useAppStore = create<StoreState>((set) => {
         set({ error: getErrorMessage(err), loading: false });
       }
     },
-    getDataPieTransactionsOUT: async () => {
+    getDataPieTransactions: async (query?: string) => {
       set({ loading: true });
       try {
-        const data = await apiData("data/pie/pengeluaran");
-        set({ dataPieTransactionsOUT: data, loading: false });
+        const data = await apiData("data/pie", query);
+        set({ dataPieTransactions: data, loading: false });
       } catch (err) {
         set({ error: getErrorMessage(err), loading: false });
       }
     },
-    getDataPieTransactionsIN: async () => {
-      set({ loading: true });
-      try {
-        const data = await apiData("data/pie/pemasukan");
-        set({ dataPieTransactionsIN: data, loading: false });
-      } catch (err) {
-        set({ error: getErrorMessage(err), loading: false });
-      }
-    },
+
     setMonth: (month: number) => set({ month }),
     setYear: (year: number) => set({ year }),
+    getTotal: async (query?: string) => {
+      set({ loading: true });
+      try {
+        const data = await apiData("total", query);
+        set({ total: data, loading: false });
+      } catch (err) {
+        set({ error: getErrorMessage(err), loading: false });
+      }
+    },
   };
 });

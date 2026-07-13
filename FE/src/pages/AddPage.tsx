@@ -72,6 +72,7 @@ export function AddPage() {
         tanggal: date,
         users_id: username,
       };
+      console.log("payload", payload);
       await apiData(null, null, "POST", payload);
     } catch (error) {
       console.error("Error saving transaction:", error);
