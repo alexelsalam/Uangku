@@ -1,38 +1,82 @@
+import { useEffect } from "react";
+import { handleExport } from "../components/ui/handleExportCsv";
 import Logout from "../components/ui/Logout";
+import { useApp } from "../hooks/useAppContext";
+import { useAppStore } from "../store/store";
 
 export function ProfilePage() {
+  const { showToast } = useApp();
+  const alltransactions = useAppStore((state) => state.allTransactions);
+
   interface MenuItem {
     emoji: string;
     bg: string;
     label: string;
     badge?: string;
     extra?: string;
+    onClick: () => void;
   }
   const groups: { label: string; items: MenuItem[] }[] = [
     {
       label: "Akun",
       items: [
-        { emoji: "👤", bg: "#fef3c7", label: "Edit Profil" },
-        { emoji: "🔒", bg: "#fce7f3", label: "Ubah Password" },
-        { emoji: "🔔", bg: "#ede9fe", label: "Notifikasi", badge: "Aktif" },
+        {
+          emoji: "👤",
+          bg: "#fef3c7",
+          label: "Edit Profil",
+          onClick: () => showToast("👤 Edit profil segera hadir"),
+        },
+        {
+          emoji: "🔒",
+          bg: "#fce7f3",
+          label: "Ubah Password",
+          onClick: () => showToast("🔒 Ubah password segera hadir"),
+        },
+        {
+          emoji: "🔔",
+          bg: "#ede9fe",
+          label: "Notifikasi",
+          onClick: () => showToast("🔔 Notifikasi segera hadir"),
+          badge: "Aktif",
+        },
       ],
     },
     {
       label: "Data & Privasi",
       items: [
-        { emoji: "📤", bg: "#dcfce7", label: "Export CSV" },
-        { emoji: "📄", bg: "#fef9c3", label: "Export PDF" },
-        { emoji: "☁", bg: "#e0f2fe", label: "Backup & Restore" },
+        {
+          emoji: "📤",
+          bg: "#dcfce7",
+          label: "Export CSV",
+          onClick: () => handleExport(alltransactions, showToast),
+        },
+        {
+          emoji: "📄",
+          bg: "#fef9c3",
+          label: "Export PDF",
+          onClick: () => showToast("📄 Export PDF segera hadir"),
+        },
+        {
+          emoji: "☁",
+          bg: "#e0f2fe",
+          label: "Backup & Restore",
+          onClick: () => showToast("☁ Backup cloud segera hadir"),
+        },
       ],
     },
     {
       label: "Tampilan",
       items: [
-        { emoji: "🌐", bg: "#f0fdf4", label: "Bahasa", extra: "Indonesia" },
+        {
+          emoji: "🌐",
+          bg: "#f0fdf4",
+          label: "Bahasa",
+          onClick: () => showToast("🌐 pilih bahasa segera hadir"),
+          extra: "Indonesia",
+        },
       ],
     },
   ];
-
   return (
     <div className="flex-1 overflow-y-auto h-screen hide-scrollbar">
       <div className="px-5 pt-5 text-center">
@@ -61,6 +105,7 @@ export function ProfilePage() {
             {g.items.map((item) => (
               <button
                 key={item.label}
+                onClick={item.onClick}
                 className="w-full flex items-center gap-3 py-3.5 border-b border-[var(--color-border)] text-left active:bg-[var(--color-amber-light)] transition-colors"
               >
                 <div

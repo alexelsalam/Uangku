@@ -19,7 +19,6 @@ export function GroupCard({
   totalIncome: number;
   budgets: Record<string, number>;
   spendingMap: Record<string, number>;
-  // txCountMap: Record<string, number>;
   categoryGroups: Record<string, String | null>;
   onEdit: (catId: string) => void;
 }) {
@@ -111,7 +110,6 @@ export function GroupCard({
             catId={cat.id}
             budget={budgets[cat.id]}
             spent={spendingMap[cat.id] ?? 0}
-            // txCount={txCountMap[cat.id] ?? 0}
             groupColor={group.color}
             onEdit={() => onEdit(cat.id)}
           />

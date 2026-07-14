@@ -22,7 +22,6 @@ export function CatRow({
   onEdit: () => void;
 }) {
   const cat = CATEGORIES.find((c) => c.id === catId);
-  // const meta = CATEGORY_META[catId] ?? FALLBACK_META;
   const Icon = cat?.icon || FALLBACK_META.icon;
   const barPct = budget ? pct(spent, budget) : 0;
   const isWarn = barPct >= 80;

@@ -10,6 +10,15 @@ export interface MonthRange {
   from: string; // "2026-07-01"
   to: string; // "2026-07-31"
 }
+export interface Transaction {
+  id: string;
+  tipe: TransactionType;
+  jumlah: number;
+  kategori: string;
+  catatan: string;
+  tanggal: string;
+  waktu: string;
+}
 export interface TotalResult {
   dari: string;
   sampai: string;
@@ -23,4 +32,8 @@ export interface TotalResult {
     saldo: number;
     total_transaksi: number;
   };
+}
+export interface ToastState {
+  visible: boolean;
+  message: string;
 }

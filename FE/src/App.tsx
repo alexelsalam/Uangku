@@ -13,9 +13,10 @@ import { ProfilePage } from "./pages/ProfilePage.js";
 import { CategoriesPage } from "./pages/CategoriesPage.js";
 import { AddPage } from "./pages/AddPage.js";
 import { ReportPage } from "./pages/RaportPage.js";
-import { AppProvider } from "./hooks/useAppContext.js";
+import { AppProvider, useApp } from "./hooks/useAppContext.js";
 import { LoginPage } from "./pages/LoginPage.js";
 import { RegisterPage } from "./pages/RegisterPage.js";
+import { Toast } from "./components/ui/Toast.js";
 function App() {
   return (
     <AppProvider>
@@ -40,6 +41,7 @@ function App() {
           {/* <Nav /> */}
         </Router>
         {/* <Analytics /> */}
+        <Toast />
       </div>
     </AppProvider>
   );

@@ -47,16 +47,7 @@ export function AddPage() {
     if (!amount) {
       alert("⚠ Masukkan jumlah transaksi");
       return;
-    } //{ showToast('⚠ Masukkan jumlah transaksi'); return }
-    // addTransaction({
-    //   type: txType,
-    //   amount,
-    //   categoryId,
-    //   note: note || (CATEGORIES.find(c => c.id === categoryId)?.name ?? ''),
-    //   date,
-    //   time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-    // })
-    // showToast('✅ Transaksi berhasil disimpan')
+    }
     try {
       const payload: Payload = {
         tipe: txType,
@@ -84,7 +75,6 @@ export function AddPage() {
       setCategoryId(txType === "Pengeluaran" ? "FnB" : "salary");
       setTxType("Pengeluaran");
       setShowNumpad(false);
-      // setTimeout(() => navigate("home"), 600);
     }
   };
   return (

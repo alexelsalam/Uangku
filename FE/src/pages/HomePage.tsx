@@ -39,10 +39,13 @@ import Skeleton from "../components/ui/Skeleton";
 import { useNavigate } from "react-router-dom";
 import { MonthlySetting } from "../components/ui/MonthlySetting";
 import { useShallow } from "zustand/shallow";
+import { useApp } from "../hooks/useAppContext";
+import { handleExport } from "../components/ui/handleExportCsv";
 
 export function HomePage() {
   const navigate = useNavigate();
   const [newData, setNewData] = useState(false);
+  const { showToast } = useApp();
   const {
     loading,
     total,
@@ -173,12 +176,12 @@ export function HomePage() {
     {
       emoji: "🎯",
       label: "Budget",
-      onClick: () => alert("🎯 Fitur budget segera hadir"),
+      onClick: () => navigate("/categories"),
     },
     {
       emoji: "📤",
       label: "Export",
-      onClick: () => alert("📤 Fitur Export ke CSV / PDF"),
+      onClick: () => handleExport(allTransactions),
     },
   ];
 
@@ -204,13 +207,13 @@ export function HomePage() {
         <MonthlySetting newData={newData} setNewData={setNewData} />
         <div className="flex gap-2">
           <button
-            // onClick={() => showToast("🔔 Tidak ada notifikasi")}
+            onClick={() => showToast("🔔 notifikasi segera hadir")}
             className="w-9 h-9 bg-surface border border-border rounded-sm flex items-center justify-center text-base"
           >
             🔔
           </button>
           <button
-            // onClick={() => showToast("🔍 Cari transaksi")}
+            onClick={() => showToast("🔍  Cari transaksi segera hadir")}
             className="w-9 h-9 bg-surface border border-border rounded-sm flex items-center justify-center text-base"
           >
             🔍

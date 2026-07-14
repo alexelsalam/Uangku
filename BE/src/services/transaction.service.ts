@@ -207,3 +207,39 @@ export async function getPieChartData(
   ]);
   return result.rows;
 }
+export async function getTransactionsForExport(
+  userId: string,
+  filter: TransactionFilter,
+) {
+  // reuse findTransactions tapi SELECT kolom spesifik dengan urutan yang rapi untuk CSV
+  const conditions: string[] = ["users_id = $1"];
+  const params: unknown[] = [userId];
+  let idx = 2;
+
+  const { tipe, kategori, dari, sampai } = filter;
+
+  if (tipe) {
+    conditions.push(`tipe = $${idx++}`);
+    params.push(tipe);
+  }
+  if (kategori) {
+    conditions.push(`kategori = $${idx++}`);
+    params.push(kategori.trim());
+  }
+  if (dari && sampai) {
+    conditions.push(`tanggal BETWEEN $${idx} AND $${idx + 1}`);
+    params.push(dari, sampai);
+  }
+
+  const query = `
+    SELECT
+      id, tanggal, waktu, tipe, kategori,
+      jumlah, pembayaran, catatan
+    FROM transactions
+    WHERE ${conditions.join(" AND ")}
+    ORDER BY tanggal DESC, waktu DESC
+  `;
+
+  const result = await pool.query(query, params);
+  return result.rows;
+}

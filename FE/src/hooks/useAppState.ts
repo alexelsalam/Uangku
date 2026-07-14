@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { CATEGORIES } from "../data/catergoryMeta";
-import { GroupId } from "../types";
+import { GroupId, ToastState } from "../types";
 
 export interface AppState {
   // Budget
@@ -10,6 +10,9 @@ export interface AppState {
   // Group assignment
   categoryGroups: Record<string, GroupId | null>;
   setGroup: (categoryId: string, groupId: GroupId | null) => void;
+  //toast
+  toast: ToastState;
+  showToast: (message: string) => void;
 }
 function buildDefaultBudgets(): Record<string, number> {
   return Object.fromEntries(
@@ -41,6 +44,10 @@ export function useAppState(): AppState {
       return { ...prev, [categoryId]: amount };
     });
   }, []);
+  const [toast, setToast] = useState<ToastState>({
+    visible: false,
+    message: "",
+  });
 
   const getBudget = useCallback(
     (categoryId: string) => budgets[categoryId],
@@ -52,11 +59,18 @@ export function useAppState(): AppState {
     },
     [],
   );
+  const showToast = useCallback((message: string) => {
+    setToast({ visible: true, message });
+    console.log("showToast", message);
+    setTimeout(() => setToast({ visible: false, message: "" }), 2200);
+  }, []);
   return {
     categoryGroups,
     setGroup,
     budgets,
     setBudget,
     getBudget,
+    toast,
+    showToast,
   };
 }

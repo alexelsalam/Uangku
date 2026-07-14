@@ -13,13 +13,7 @@ import { useShallow } from "zustand/shallow";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export function CategoriesPage() {
-  const {
-    budgets,
-    setBudget,
-    categoryGroups,
-    setGroup,
-    // showToast,
-  } = useApp();
+  const { budgets, setBudget, categoryGroups, setGroup, showToast } = useApp();
   const {
     total,
     dataPieTransactions,
@@ -116,7 +110,9 @@ export function CategoriesPage() {
             Kategori
           </h1>
           <button
-            // onClick={() => showToast("➕ Tambah kategori baru")}
+            onClick={() =>
+              showToast("➕ Fitur Tambah kategori baru segera hadir")
+            }
             className="flex items-center gap-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] rounded-[10px] px-3 py-2 text-xs font-bold"
           >
             <Plus size={13} /> Baru
@@ -168,7 +164,6 @@ export function CategoriesPage() {
             totalIncome={totalIncome}
             budgets={budgets}
             spendingMap={spendingMap}
-            // txCountMap={txCountMap}
             categoryGroups={categoryGroups}
             onEdit={setEditingCatId}
           />
@@ -187,7 +182,6 @@ export function CategoriesPage() {
                   catId={cat.id}
                   budget={budgets[cat.id]}
                   spent={spendingMap[cat.id] ?? 0}
-                  // txCount={txCountMap[cat.id] ?? 0}
                   groupColor="#a89888"
                   onEdit={() => setEditingCatId(cat.id)}
                 />
