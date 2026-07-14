@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import transactionsRouter from "./routes/transactions";
+import transactionsRouter from "./routes/transactions.js";
 import authRouter from "./routes/auth.js";
 import middleware from "./middleware/middleware.js";
 import cors from "cors";
