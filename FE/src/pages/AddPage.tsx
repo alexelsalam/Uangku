@@ -23,7 +23,6 @@ export function AddPage() {
   const cats = txType === "Pengeluaran" ? EXPENSE_CATS : INCOME_CATS;
   const token = localStorage.getItem("token");
   let username = "";
-
   if (token) {
     try {
       const decoded = jwtDecode<CustomJwtPayload>(token);
@@ -48,6 +47,8 @@ export function AddPage() {
       alert("⚠ Masukkan jumlah transaksi");
       return;
     }
+    console.log("note", note);
+
     try {
       const payload: Payload = {
         tipe: txType,
@@ -63,7 +64,6 @@ export function AddPage() {
         tanggal: date,
         users_id: username,
       };
-      console.log("payload", payload);
       await apiData(null, null, "POST", payload);
     } catch (error) {
       console.error("Error saving transaction:", error);

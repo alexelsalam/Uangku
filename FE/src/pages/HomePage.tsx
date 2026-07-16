@@ -147,12 +147,10 @@ export function HomePage() {
   }, [dataPieTransactions, categoryColor]);
 
   // Filtered & grouped transactions
-
   const filteredTxs = useMemo(() => {
     if (activeFilter === "all") return allTransactions;
     return allTransactions.filter((t) => t.kategori === activeFilter);
   }, [allTransactions, activeFilter]);
-
   const grouped = useMemo(() => groupByDate(filteredTxs), [filteredTxs]);
   const filterCategories = useMemo(() => {
     const ids = [

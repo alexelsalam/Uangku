@@ -38,7 +38,7 @@ export async function findTransactions(
   const offset = options?.offset ?? 0;
 
   const query = `
-    SELECT id, tipe, kategori, jumlah, pembayaran, tanggal, waktu
+    SELECT id, tipe, kategori, jumlah, pembayaran, tanggal, waktu,catatan
     FROM transactions
     WHERE ${conditions.join(" AND ")}
     ORDER BY tanggal DESC, waktu DESC
