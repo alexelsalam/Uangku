@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 // import { CATEGORIES, MONTHLY_DATA } from "@/data/seed";
-import { formatIDR, getDateRangeParams } from "../utils/index";
+import {
+  formatChangePercent,
+  formatIDR,
+  getDateRangeParams,
+} from "../utils/index";
 import { useAppStore } from "../store/store";
 import { CATEGORIES, FALLBACK_META } from "../data/catergoryMeta";
 import { Icon } from "lucide-react";
@@ -51,6 +55,7 @@ export function ReportPage() {
     getDataBarTransactions,
     getDataPieTransactions,
   ]);
+
   const totalIncome = total.pemasukan;
   const totalExpense = total.pengeluaran;
   const {
@@ -107,24 +112,28 @@ export function ReportPage() {
       label: "Pemasukan",
       value: formattedTotalIncome,
       color: "var(--color-green)",
+
       changeColor: "var(--color-green)",
     },
     {
       label: "Pengeluaran",
       value: formattedTotalExpense,
       color: "var(--color-red)",
+
       changeColor: "var(--color-red)",
     },
     {
       label: "Saldo",
       value: formatBalance,
       color: "var(--color-ink)",
+
       changeColor: "var(--color-green)",
     },
     {
       label: "Transaksi",
       value: `${txCount}`,
       color: "var(--color-ink)",
+
       changeColor: "var(--color-ink-3)",
     },
   ];

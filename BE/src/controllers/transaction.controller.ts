@@ -50,13 +50,8 @@ export async function getTotals(req: Request, res: Response) {
     if (dateError) return res.status(400).json({ error: dateError });
 
     const range = validator.resolveRange(dari, sampai);
-    const rangePrev = validator.getPrevRange(range);
 
-    const result = await service.getTotals(
-      req.user as string,
-      range,
-      rangePrev,
-    );
+    const result = await service.getTotals(req.user as string, range);
     return res.json(result);
   } catch (error) {
     console.error("getTotals:", error);

@@ -26,12 +26,6 @@ export interface TotalResult {
   pengeluaran: number;
   saldo: number;
   total_transaksi: number;
-  perubahan: {
-    pemasukan: number;
-    pengeluaran: number;
-    saldo: number;
-    total_transaksi: number;
-  };
 }
 export interface ToastState {
   visible: boolean;

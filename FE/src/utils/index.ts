@@ -116,3 +116,9 @@ export function getDateRangeParams(year: number | string, month: number) {
 
   return { startStr, endStr, query: `dari=${startStr}&sampai=${endStr}` };
 }
+// conver to %
+export const formatChangePercent = (change: number, base: number) => {
+  if (!base) return "0%";
+  const pct = (change / base) * 100;
+  return `${change >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
+};

@@ -17,15 +17,7 @@ export function resolveRange(dari?: string, sampai?: string): DateRange {
     sampai: new Date(year, month, 0).toISOString().slice(0, 10),
   };
 }
-export function getPrevRange(range: DateRange): DateRange {
-  const d = new Date(range.dari);
-  const year = d.getMonth() === 0 ? d.getFullYear() - 1 : d.getFullYear();
-  const month = d.getMonth() === 0 ? 12 : d.getMonth();
-  return {
-    dari: `${year}-${String(month).padStart(2, "0")}-01`,
-    sampai: new Date(year, month, 0).toISOString().slice(0, 10),
-  };
-}
+
 export function validateTransactionPayload(
   body: Partial<TransactionPayload>,
 ): string | null {

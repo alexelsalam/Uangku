@@ -35,7 +35,14 @@ export const useAppStore = create<StoreState>((set) => {
   return {
     month: now.getMonth(),
     year: now.getFullYear(),
-    total: {} as TotalResult,
+    total: {
+      dari: "",
+      sampai: "",
+      pemasukan: 0,
+      pengeluaran: 0,
+      saldo: 0,
+      total_transaksi: 0,
+    },
     allTransactions: [],
     dataBarTransactions: [],
     dataPieTransactions: [],

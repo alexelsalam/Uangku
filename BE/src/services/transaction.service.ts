@@ -50,16 +50,7 @@ export async function findTransactions(
   return result.rows;
 }
 
-function calcChange(curr: number, prev: number): number {
-  if (prev === 0) return curr === 0 ? 0 : 100;
-  return Math.round(((curr - prev) / prev) * 1000) / 10; // 1 decimal
-}
-
-export async function getTotals(
-  userId: string,
-  range: DateRange,
-  rangePrev: DateRange,
-) {
+export async function getTotals(userId: string, range: DateRange) {
   const query = `
     SELECT
       COALESCE(SUM(CASE WHEN tipe = 'Pemasukan'   THEN jumlah ELSE 0 END), 0)::integer AS pemasukan,
@@ -70,23 +61,14 @@ export async function getTotals(
       AND tanggal BETWEEN $2 AND $3
   `;
 
-  const [curr, prev] = await Promise.all([
-    pool.query(query, [userId, range.dari, range.sampai]),
-    pool.query(query, [userId, rangePrev.dari, rangePrev.sampai]),
-  ]);
+  const curr = await pool.query(query, [userId, range.dari, range.sampai]);
 
   const c = curr.rows[0];
-  const p = prev.rows[0];
 
   const pemasukan = Number(c.pemasukan);
   const pengeluaran = Number(c.pengeluaran);
   const saldo = pemasukan - pengeluaran;
   const totalTrx = Number(c.total_transaksi);
-
-  const pPemasukan = Number(p.pemasukan);
-  const pPengeluaran = Number(p.pengeluaran);
-  const pSaldo = pPemasukan - pPengeluaran;
-  const pTotalTrx = Number(p.total_transaksi);
 
   return {
     dari: range.dari,
@@ -95,12 +77,6 @@ export async function getTotals(
     pengeluaran,
     saldo,
     total_transaksi: totalTrx,
-    perubahan: {
-      pemasukan: calcChange(pemasukan, pPemasukan),
-      pengeluaran: calcChange(pengeluaran, pPengeluaran),
-      saldo: calcChange(saldo, pSaldo),
-      total_transaksi: calcChange(totalTrx, pTotalTrx),
-    },
   };
 }
 
