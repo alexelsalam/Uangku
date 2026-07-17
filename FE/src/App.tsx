@@ -10,7 +10,7 @@ import AuthMiddleware from "./utils/AuthMiddleware.js";
 import { HomePage } from "./pages/HomePage.js";
 import { DetailPage } from "./pages/DetailPage.js";
 import { ProfilePage } from "./pages/ProfilePage.js";
-import { CategoriesPage } from "./pages/CategoriesPage.js";
+import { BudgetPage } from "./pages/BudgetPage.js";
 import { AddPage } from "./pages/AddPage.js";
 import { ReportPage } from "./pages/RaportPage.js";
 import { AppProvider, useApp } from "./hooks/useAppContext.js";
@@ -29,7 +29,7 @@ function App() {
               <Route path="/transaksi/:id" element={<DetailPage />} />
               <Route path="/report" element={<ReportPage />} />
               <Route path="/add" element={<AddPage />} />
-              <Route path="/categories" element={<CategoriesPage />} />
+              <Route path="/budget" element={<BudgetPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
             <Route element={<AuthMiddleware />}>

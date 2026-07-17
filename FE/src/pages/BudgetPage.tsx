@@ -12,7 +12,7 @@ import { CatRow } from "../components/ui/CatRow";
 import { useShallow } from "zustand/shallow";
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
-export function CategoriesPage() {
+export function BudgetPage() {
   const { budgets, setBudget, categoryGroups, setGroup, showToast } = useApp();
   const {
     total,
@@ -175,7 +175,7 @@ export function CategoriesPage() {
             <p className="px-5 pt-2 pb-2 text-[11px] font-bold text-[var(--color-ink-3)] uppercase tracking-wider">
               Tidak Dikelompokkan
             </p>
-            <div className="mx-5 mb-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[18px] overflow-hidden">
+            <div className="mx-5 mb-20 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[18px] overflow-hidden">
               {ungrouped.map((cat) => (
                 <CatRow
                   key={cat.id}
@@ -189,8 +189,6 @@ export function CategoriesPage() {
             </div>
           </>
         )}
-
-        <div className="h-6" />
       </div>
       {/* Edit sheet */}
       {editingCatId && editingCat && (

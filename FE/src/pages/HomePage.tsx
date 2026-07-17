@@ -174,7 +174,7 @@ export function HomePage() {
     {
       emoji: "🎯",
       label: "Budget",
-      onClick: () => navigate("/categories"),
+      onClick: () => navigate("/budget"),
     },
     {
       emoji: "📤",

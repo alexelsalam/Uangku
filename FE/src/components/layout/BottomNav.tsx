@@ -5,7 +5,7 @@
 import { useNavigate } from "react-router-dom";
 
 interface NavItemDef {
-  id: "home" | "report" | "add" | "categories" | "profile" | "detail";
+  id: "home" | "report" | "add" | "budget" | "profile" | "detail";
   label: string;
   emoji: string;
   isFab?: boolean;
@@ -15,7 +15,7 @@ const NAV_ITEMS: NavItemDef[] = [
   { id: "home", label: "Beranda", emoji: "🏠" },
   { id: "report", label: "Laporan", emoji: "📊" },
   { id: "add", label: "Tambah", emoji: "＋", isFab: true },
-  { id: "categories", label: "Kategori", emoji: "🗂" },
+  { id: "budget", label: "budget", emoji: "🎯" },
   { id: "profile", label: "Profil", emoji: "👤" },
 ];
 
