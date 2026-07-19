@@ -25,5 +25,7 @@ app.use("/transactions", middleware, transactionsRouter);
 app.get("/", (req: Request, res: Response) => {
   res.send("API Catatan Uang berjalan");
 });
-
+app.listen(3000, () => {
+  console.log(`Example app listening on port ${3000}`);
+});
 export default app;

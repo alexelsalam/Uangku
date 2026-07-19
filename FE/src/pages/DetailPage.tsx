@@ -5,10 +5,11 @@ import { useAppStore } from "../store/store";
 import { formatIDR, formatDate } from "../utils/index";
 import { useNavigate, useParams } from "react-router-dom";
 import { CATEGORIES } from "../data/catergoryMeta";
+import apiData from "../api/apiData";
+import { useApp } from "../hooks/useAppContext";
 
 export function DetailPage() {
-  //   const { transactions, selectedTxId, navigate, deleteTransaction, showToast } =
-  //     useApp();
+  const showToast = useApp().showToast;
   const { id } = useParams();
   const navigate = useNavigate();
   const { allTransactions, getAllTransactions } = useAppStore();
@@ -23,15 +24,23 @@ export function DetailPage() {
         Transaksi tidak ditemukan
       </div>
     );
-
   const cat = CATEGORIES.find((c) => c.id === tx!.kategori);
   const isExpense = tx!.tipe === "Pengeluaran";
 
-  function handleDelete() {
-    // deleteTransaction(tx!.id);
-    // showToast("🗑 Transaksi dihapus");
-    navigate("/home");
-  }
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await apiData(id, null, "DELETE");
+      if (!res) {
+        throw new Error("gagal dihapus/id salah");
+      }
+      showToast("🗑 Transaksi dihapus");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : String(err));
+    } finally {
+      // alert("Data berhasil dihapus");
+      navigate("/home");
+    }
+  };
   const Icon = cat?.icon;
   return (
     <div className="flex-1 overflow-y-auto hide-scrollbar h-screen">
@@ -131,7 +140,7 @@ export function DetailPage() {
           ✏ Edit
         </button>
         <button
-          onClick={handleDelete}
+          onClick={() => handleDelete(tx!.id)}
           className="flex-1 py-3.5 text-sm font-bold rounded-xl bg-red-light text-red border-[1.5px] border-red-mind"
         >
           🗑 Hapus

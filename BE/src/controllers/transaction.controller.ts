@@ -111,7 +111,7 @@ export async function deleteTransaction(req: Request, res: Response) {
     if (idError) return res.status(400).json({ error: idError });
 
     const affected = await service.deleteTransaction(
-      Number(req.params.id),
+      req.params.id as string,
       req.user as string,
     );
 

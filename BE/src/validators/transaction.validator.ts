@@ -54,6 +54,6 @@ export function validateDateRange(
 }
 
 export function validateId(id: string): string | null {
-  if (!id || isNaN(Number(id))) return "ID tidak valid";
+  if (!id) return "ID tidak valid";
   return null;
 }

@@ -133,7 +133,7 @@ export async function updateTransaction(
   return result.rowCount ?? 0;
 }
 
-export async function deleteTransaction(id: number, userId: string) {
+export async function deleteTransaction(id: string, userId: string) {
   const query = `
     DELETE FROM transactions
     WHERE id = $1 AND users_id = $2
