@@ -116,9 +116,17 @@ export function getDateRangeParams(year: number | string, month: number) {
 
   return { startStr, endStr, query: `dari=${startStr}&sampai=${endStr}` };
 }
-// conver to %
-export const formatChangePercent = (change: number, base: number) => {
-  if (!base) return "0%";
-  const pct = (change / base) * 100;
-  return `${change >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
-};
+// CHECK TOKEN EXPIRED OR NO?
+
+export function isTokenExpired(token: any) {
+  if (!token) return true;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    return payload.exp < currentTime;
+  } catch (e) {
+    return true; // token rusak
+  }
+}
